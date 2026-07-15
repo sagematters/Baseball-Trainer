@@ -1,3 +1,7 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
 <title>Daily Trainer</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#2E5D3F">
@@ -20,6 +24,7 @@
     --bg:#FDFDFB; --card:#FFFFFF; --ink:#182119; --mut:#66716A;
     --grn:#2E5D3F; --grn-soft:#EDF3EE; --line:#E5E8E2; --amber:#8A6A2F; --amber-soft:#F5EFE2; --red:#9C3B2E;}
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+  html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
   body{margin:0;background:var(--bg);color:var(--ink);
     font-family:-apple-system,"SF Pro Text","Segoe UI",system-ui,sans-serif;
     font-size:17px;line-height:1.5}
@@ -151,6 +156,8 @@
   @media (prefers-reduced-motion: reduce){#flash{transition:none}}
   button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid var(--grn);outline-offset:2px}
 </style>
+</head>
+<body>
 
 <div class="wrap">
   <header>
@@ -705,3 +712,5 @@ function endFlow(){clearInterval(P.timer);$('player').classList.remove('on');$('
 
 render();
 </script>
+</body>
+</html>
