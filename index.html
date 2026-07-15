@@ -1,74 +1,120 @@
-<title>Daily Trainer — Vacation Bridge</title>
+<title>Daily Trainer</title>
 <style>
   :root{
     --bg:#FDFDFB; --card:#FFFFFF; --ink:#182119; --mut:#66716A;
     --grn:#2E5D3F; --grn-soft:#EDF3EE; --line:#E5E8E2; --amber:#8A6A2F; --amber-soft:#F5EFE2;
+    --red:#9C3B2E;
   }
   @media (prefers-color-scheme: dark){:root{
     --bg:#121714; --card:#1A211C; --ink:#E7EBE6; --mut:#93A097;
-    --grn:#7FB694; --grn-soft:#203026; --line:#2A332C; --amber:#D9B36A; --amber-soft:#332B1B;}}
+    --grn:#7FB694; --grn-soft:#203026; --line:#2A332C; --amber:#D9B36A; --amber-soft:#332B1B; --red:#D97B6B;}}
   :root[data-theme="dark"]{
     --bg:#121714; --card:#1A211C; --ink:#E7EBE6; --mut:#93A097;
-    --grn:#7FB694; --grn-soft:#203026; --line:#2A332C; --amber:#D9B36A; --amber-soft:#332B1B;}
+    --grn:#7FB694; --grn-soft:#203026; --line:#2A332C; --amber:#D9B36A; --amber-soft:#332B1B; --red:#D97B6B;}
   :root[data-theme="light"]{
     --bg:#FDFDFB; --card:#FFFFFF; --ink:#182119; --mut:#66716A;
-    --grn:#2E5D3F; --grn-soft:#EDF3EE; --line:#E5E8E2; --amber:#8A6A2F; --amber-soft:#F5EFE2;}
+    --grn:#2E5D3F; --grn-soft:#EDF3EE; --line:#E5E8E2; --amber:#8A6A2F; --amber-soft:#F5EFE2; --red:#9C3B2E;}
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
   body{margin:0;background:var(--bg);color:var(--ink);
     font-family:-apple-system,"SF Pro Text","Segoe UI",system-ui,sans-serif;
     font-size:17px;line-height:1.5}
   .wrap{max-width:560px;margin:0 auto;padding:18px 16px 90px}
-  h1{font-size:1.05rem;margin:0;font-weight:700;letter-spacing:.01em}
+  h1{font-size:1.15rem;margin:0;font-weight:700}
   .date{color:var(--mut);font-size:.85rem}
   .goal{color:var(--mut);font-size:.95rem;margin:4px 0 0}
-  header{padding:6px 2px 14px}
+  header{padding:6px 2px 10px}
 
-  .pills{display:flex;gap:6px;overflow-x:auto;padding:2px;margin:0 -2px 14px}
+  /* tracker */
+  .track{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:14px;
+    display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .track .wk{display:flex;gap:7px}
+  .track .d{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:.62rem;color:var(--mut)}
+  .track .dot{width:20px;height:20px;border-radius:50%;border:2px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:.6rem}
+  .track .dot.w{border-color:var(--grn);background:var(--grn);color:#fff}
+  .track .dot.m{border-color:var(--grn)}
+  .track .dot.wm{border-color:var(--amber);background:var(--grn);color:#fff}
+  .track .streak{text-align:right;font-size:.78rem;color:var(--mut);line-height:1.3}
+  .track .streak b{font-size:1.15rem;color:var(--grn);display:block;font-variant-numeric:tabular-nums}
+
+  .pills{display:flex;gap:6px;overflow-x:auto;padding:2px;margin:0 -2px 12px}
   .pill{flex:0 0 auto;border:1px solid var(--line);background:var(--card);color:var(--mut);
     border-radius:99px;padding:8px 14px;font-size:.9rem;font-weight:600;cursor:pointer}
   .pill.on{background:var(--grn);border-color:var(--grn);color:#fff}
-  :root[data-theme="dark"] .pill.on, .dk .pill.on{color:#10160f}
 
-  .seg{display:flex;border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:10px;background:var(--card)}
+  .row2{display:flex;gap:8px;margin-bottom:10px}
+  select.loc{flex:1;appearance:none;-webkit-appearance:none;border:1px solid var(--line);border-radius:12px;
+    background:var(--card);color:var(--ink);font:inherit;font-weight:700;padding:12px 14px;
+    background-image:linear-gradient(45deg,transparent 50%,var(--mut) 50%),linear-gradient(135deg,var(--mut) 50%,transparent 50%);
+    background-position:calc(100% - 20px) 55%,calc(100% - 14px) 55%;background-size:6px 6px;background-repeat:no-repeat}
+  .seg{display:flex;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--card)}
+  .seg.grow{flex:1.3}
   .seg button{flex:1;border:0;background:transparent;color:var(--mut);font:inherit;font-weight:600;
-    padding:12px 0;cursor:pointer}
+    padding:12px 4px;cursor:pointer;font-size:.9rem}
   .seg button.on{background:var(--grn-soft);color:var(--grn)}
+  .lenrow{display:flex;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--card);margin-bottom:14px}
+  .lenrow button{flex:1;border:0;background:transparent;color:var(--mut);font:inherit;font-weight:600;padding:12px 0;cursor:pointer}
+  .lenrow button.on{background:var(--grn);color:#fff}
+  .lenrow button .t{display:block;font-size:.68rem;font-weight:500;opacity:.85}
 
-  .feels{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
-  .feel{border:1px solid var(--line);background:var(--card);color:var(--mut);border-radius:10px;
-    padding:9px 12px;font-size:.85rem;font-weight:600;cursor:pointer}
-  .feel.on{border-color:var(--grn);color:var(--grn);background:var(--grn-soft)}
-
-  .banner{background:var(--amber-soft);color:var(--amber);border-radius:12px;padding:12px 14px;
-    font-size:.92rem;margin-bottom:14px;font-weight:500}
-
-  .block{margin-bottom:18px}
-  .block>h2{font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--grn);
-    margin:0 0 8px;font-weight:700}
-  .block>h2 .opt{color:var(--mut);font-weight:600;letter-spacing:.04em;text-transform:none}
+  .lead{font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;color:var(--mut);font-weight:700;margin:16px 0 8px}
+  .lead.main{color:var(--grn)}
   .ex{background:var(--card);border:1px solid var(--line);border-radius:14px;margin-bottom:8px;overflow:hidden}
+  .ex.bonus{border-style:dashed}
   .ex>button{width:100%;display:flex;justify-content:space-between;align-items:center;gap:10px;
     background:transparent;border:0;color:inherit;font:inherit;text-align:left;padding:14px 16px;cursor:pointer}
   .ex .nm{font-weight:600}
   .ex .rx{color:var(--grn);font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap;font-size:.95rem}
   .ex .det{display:none;padding:0 16px 16px;border-top:1px solid var(--line)}
   .ex.open .det{display:block}
-  .fig{display:flex;justify-content:center;padding:14px 0 6px;color:var(--grn)}
-  .fig svg{width:150px;height:120px;stroke:currentColor;fill:none;stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
+  .fig{display:flex;justify-content:center;gap:14px;padding:14px 0 4px;color:var(--grn);flex-wrap:wrap}
+  .fig .fr{display:flex;flex-direction:column;align-items:center;gap:2px}
+  .fig .fr span{font-size:.68rem;color:var(--mut);font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+  .fig svg{width:118px;height:96px;stroke:currentColor;fill:none;stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
   .g{margin:10px 0 0}
   .g b{display:block;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);margin-bottom:2px}
   .g p{margin:0;font-size:.95rem}
+  .g ol{margin:2px 0 0;padding-left:20px;font-size:.95rem}
+  .g ol li{margin-bottom:5px}
   .meta{color:var(--mut);font-size:.85rem;margin-top:10px}
+  a.demo{display:inline-block;margin-top:12px;color:var(--grn);font-weight:700;text-decoration:none;font-size:.92rem}
 
-  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:18px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin:14px 0}
   .card h2{font-size:1rem;margin:0 0 6px}
   .card p{margin:6px 0;font-size:.95rem}
   .card ul{margin:6px 0;padding-left:20px;font-size:.95rem}
-  .card li{margin-bottom:4px}
   .big{display:block;width:100%;border:0;border-radius:14px;background:var(--grn);color:#fff;
     font:inherit;font-weight:700;font-size:1.05rem;padding:16px;cursor:pointer;margin-top:10px}
-  :root[data-theme="dark"] .big{color:#10160f}
+  .big.done{background:var(--grn-soft);color:var(--grn);border:2px solid var(--grn)}
   .linkish{background:none;border:0;color:var(--grn);font:inherit;font-weight:600;padding:8px 0;cursor:pointer}
+  .steps{font-size:.9rem;color:var(--mut)}
+  .steps>div{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--line)}
+  .steps>div:last-child{border-bottom:0}
+
+  /* nutrition */
+  .totals{display:flex;gap:10px;margin:8px 0 4px}
+  .tot{flex:1;background:var(--grn-soft);border-radius:12px;padding:10px 12px;text-align:center}
+  .tot b{display:block;font-size:1.25rem;font-variant-numeric:tabular-nums;color:var(--grn)}
+  .tot span{font-size:.72rem;color:var(--mut);letter-spacing:.05em;text-transform:uppercase;font-weight:700}
+  .meals{display:flex;gap:6px;margin:10px 0}
+  .meals button{flex:1;border:1px solid var(--line);background:var(--card);color:var(--mut);border-radius:10px;
+    padding:10px 0;font:inherit;font-weight:600;font-size:.85rem;cursor:pointer}
+  .meals button.on{border-color:var(--grn);color:var(--grn);background:var(--grn-soft)}
+  .addrow{display:flex;gap:6px;margin-top:8px}
+  .addrow select,.addrow input{border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);
+    font:inherit;padding:10px}
+  .addrow select{flex:1;min-width:0}
+  .addrow input{width:64px;text-align:center}
+  .addrow button{border:0;border-radius:10px;background:var(--grn);color:#fff;font:inherit;font-weight:700;padding:0 16px;cursor:pointer}
+  .custom{display:none;gap:6px;margin-top:8px}
+  .custom.show{display:flex}
+  .custom input{border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);font:inherit;padding:10px}
+  .custom .cn{flex:1;min-width:0}.custom .cc,.custom .cp{width:70px;text-align:center}
+  .foodlist{margin-top:10px;font-size:.92rem}
+  .foodlist .fi{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--line)}
+  .foodlist .fi:last-child{border-bottom:0}
+  .foodlist .fm{color:var(--mut);font-size:.75rem;text-transform:uppercase;letter-spacing:.05em;margin-right:6px}
+  .foodlist .fnum{color:var(--mut);font-variant-numeric:tabular-nums;font-size:.85rem;white-space:nowrap}
+  .foodlist .del{border:0;background:none;color:var(--red);font-size:1.1rem;cursor:pointer;padding:2px 6px}
 
   /* player */
   #player{position:fixed;inset:0;background:var(--bg);display:none;flex-direction:column;z-index:50;
@@ -77,26 +123,28 @@
   #player .top{display:flex;justify-content:space-between;align-items:center;color:var(--mut);font-size:.9rem}
   #pbar{height:5px;background:var(--line);border-radius:99px;margin:12px 0;overflow:hidden}
   #pbarF{height:100%;background:var(--grn);width:0%}
-  #player .mid{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:0}
-  #pfig{color:var(--grn)}
-  #pfig svg{width:190px;height:150px;stroke:currentColor;fill:none;stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
-  #pname{font-size:1.5rem;font-weight:700;margin:6px 0 2px;text-wrap:balance}
+  #player .mid{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:0;overflow-y:auto}
+  #pfig{color:var(--grn);display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
+  #pfig .fr{display:flex;flex-direction:column;align-items:center;gap:2px}
+  #pfig .fr span{font-size:.7rem;color:var(--mut);font-weight:700;letter-spacing:.05em;text-transform:uppercase}
+  #pfig svg{width:132px;height:104px;stroke:currentColor;fill:none;stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
+  #pname{font-size:1.4rem;font-weight:700;margin:6px 0 2px;text-wrap:balance}
   #ptype{font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--grn);font-weight:700}
-  #pcue{color:var(--mut);max-width:34ch;margin:8px auto 0;font-size:.98rem}
-  #ptime{font-size:4.4rem;font-weight:800;font-variant-numeric:tabular-nums;line-height:1;margin-top:14px}
+  #ptype.ready{color:var(--amber)}
+  #pcue{color:var(--mut);max-width:36ch;margin:8px auto 0;font-size:.95rem}
+  #pcue ol{text-align:left;margin:4px 0 0;padding-left:20px}
+  #pcue ol li{margin-bottom:3px}
+  #ptime{font-size:4rem;font-weight:800;font-variant-numeric:tabular-nums;line-height:1;margin-top:12px}
+  #ptime.ready{color:var(--amber)}
   #pnext{color:var(--mut);font-size:.9rem;margin-top:10px}
   #player .btns{display:flex;gap:10px;margin-top:16px}
   #player .btns button{flex:1;border:1px solid var(--line);background:var(--card);color:var(--ink);
     font:inherit;font-weight:700;border-radius:14px;padding:16px 0;cursor:pointer;font-size:1rem}
   #player .btns .go{background:var(--grn);border-color:var(--grn);color:#fff;flex:1.6}
-  :root[data-theme="dark"] #player .btns .go{color:#10160f}
   #flash{position:fixed;inset:0;background:var(--grn);opacity:0;pointer-events:none;z-index:60;transition:opacity .18s}
   #flash.on{opacity:.35}
   @media (prefers-reduced-motion: reduce){#flash{transition:none}}
-  button:focus-visible{outline:3px solid var(--grn);outline-offset:2px}
-  .steps{font-size:.9rem;color:var(--mut)}
-  .steps div{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--line)}
-  .steps div:last-child{border-bottom:0}
+  button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid var(--grn);outline-offset:2px}
 </style>
 
 <div class="wrap">
@@ -106,21 +154,20 @@
     <p class="goal" id="hgoal"></p>
   </header>
 
+  <div class="track" id="track"></div>
   <div class="pills" id="daypills"></div>
-  <div class="seg" id="locseg"></div>
-  <div class="feels" id="feels"></div>
-  <div id="banner"></div>
+  <div id="controls"></div>
   <div id="content"></div>
 </div>
 
 <div id="player">
-  <div class="top"><span id="pcount"></span><button class="linkish" onclick="endFlow()">Exit</button></div>
+  <div class="top"><span id="pcount"></span><button class="linkish" onclick="endFlow(false)">Exit</button></div>
   <div id="pbar"><div id="pbarF"></div></div>
   <div class="mid">
     <span id="ptype"></span>
     <div id="pfig"></div>
     <div id="pname"></div>
-    <p id="pcue"></p>
+    <div id="pcue"></div>
     <div id="ptime"></div>
     <div id="pnext"></div>
   </div>
@@ -133,8 +180,27 @@
 <div id="flash"></div>
 
 <script>
-/* ---------- figures (simple gesture drawings) ---------- */
+/* ================= figures ================= */
 var FIGS = {
+  stand:'<circle cx="60" cy="16" r="7"/><path d="M60 23 60 58"/><path d="M60 58 52 90 M60 58 68 90"/><path d="M60 30 48 48 M60 30 72 48"/><path d="M10 94h100"/>',
+  armsup:'<circle cx="60" cy="20" r="7"/><path d="M60 27 60 60"/><path d="M60 60 52 92 M60 60 68 92"/><path d="M60 34 42 14 M60 34 78 14"/><path d="M10 94h100"/>',
+  quad:'<circle cx="88" cy="34" r="7"/><path d="M82 40 46 44"/><path d="M78 44 78 66 M46 46 44 66"/><path d="M46 44 30 52 26 66"/><path d="M10 70h104"/>',
+  horse:'<circle cx="60" cy="18" r="7"/><path d="M60 25 60 50"/><path d="M60 50 34 58 30 92 M60 50 86 58 90 92"/><path d="M60 34 40 40 M60 34 80 40"/><path d="M10 94h100"/>',
+  horseL:'<circle cx="44" cy="20" r="7"/><path d="M44 27 42 52"/><path d="M42 52 26 60 24 92 M42 52 80 62 92 92"/><path d="M44 36 28 42 M44 36 64 42"/><path d="M10 94h100"/><path d="M76 24 56 24" stroke-dasharray="2 5"/>',
+  bow:'<circle cx="52" cy="18" r="7"/><path d="M52 25 54 50"/><path d="M54 50 34 60 30 92"/><path d="M54 50 84 56 102 70"/><path d="M52 32 84 26"/><path d="M10 94h100"/>',
+  wgs:'<circle cx="44" cy="26" r="7"/><path d="M44 33 52 54"/><path d="M52 54 34 62 30 92"/><path d="M52 54 82 60 100 76"/><path d="M48 42 44 70"/><path d="M10 94h100"/>',
+  lungeadd:'<circle cx="50" cy="20" r="7"/><path d="M50 27 52 52"/><path d="M52 52 30 62 24 92"/><path d="M52 52 82 58 100 74"/><path d="M10 94h100"/>',
+  kneelwall:'<circle cx="42" cy="26" r="7"/><path d="M42 33 46 58"/><path d="M46 58 66 62"/><path d="M66 62 88 56"/><path d="M46 58 44 92"/><rect x="84" y="44" width="24" height="50"/><path d="M6 94h80"/>',
+  couch:'<circle cx="40" cy="20" r="7"/><path d="M40 27 44 54"/><path d="M44 54 66 60"/><path d="M66 60 88 48"/><path d="M44 54 40 92"/><rect x="84" y="44" width="24" height="50"/><path d="M6 94h80"/><path d="M30 40 20 46" stroke-dasharray="2 4"/>',
+  legswing:'<circle cx="52" cy="16" r="7"/><path d="M52 23 52 52"/><path d="M52 52 50 92"/><path d="M52 52 84 44 M52 52 78 76" stroke-dasharray="2 5"/><path d="M52 30 30 26"/><path d="M10 94h100"/>',
+  frog:'<circle cx="60" cy="34" r="7"/><path d="M60 41 60 62"/><path d="M60 62 32 66 24 84 M60 62 88 66 96 84"/><path d="M56 48 40 56 M64 48 80 56"/><path d="M10 90h100"/>',
+  frogback:'<circle cx="60" cy="44" r="7"/><path d="M60 51 60 68"/><path d="M60 68 34 70 26 84 M60 68 86 70 94 84"/><path d="M56 56 42 62 M64 56 78 62"/><path d="M10 90h100"/><path d="M60 30 60 20" stroke-dasharray="2 4"/>',
+  ninety:'<circle cx="52" cy="20" r="7"/><path d="M52 27 52 56"/><path d="M52 56 78 58 80 78"/><path d="M52 56 30 62 14 54"/><path d="M10 84h100"/>',
+  ninetylean:'<circle cx="70" cy="30" r="7"/><path d="M66 36 50 58"/><path d="M50 58 78 60 82 78"/><path d="M50 58 28 64 12 56"/><path d="M10 84h100"/><path d="M84 20 94 14" stroke-dasharray="2 4"/>',
+  ankle:'<path d="M96 8v86"/><circle cx="40" cy="24" r="7"/><path d="M40 31 48 58"/><path d="M48 58 74 66 78 92"/><path d="M48 58 40 92"/><path d="M6 94h90"/>',
+  deep:'<circle cx="58" cy="30" r="7"/><path d="M58 37 54 58"/><path d="M54 58 74 62 72 92 M54 58 38 64 40 92"/><path d="M56 44 84 40"/><path d="M10 94h100"/>',
+  glide:'<circle cx="46" cy="34" r="7"/><path d="M46 41 44 60"/><path d="M44 60 24 66 22 92 M44 60 74 64 98 78"/><path d="M10 94h100"/><path d="M82 46 100 46" stroke-dasharray="2 5"/>',
+  rest:'<circle cx="22" cy="70" r="7"/><path d="M29 72 66 74"/><path d="M66 74 78 56 90 74"/><path d="M10 82h104"/><path d="M40 60c4-6 12-6 16 0" stroke-dasharray="2 4"/>',
   squat:'<circle cx="72" cy="18" r="7"/><path d="M70 25 56 50"/><path d="M56 50 74 58 70 90"/><path d="M56 50 46 88"/><path d="M64 34 92 40"/><path d="M10 94h100"/>',
   split:'<circle cx="60" cy="14" r="7"/><path d="M60 21 58 52"/><path d="M58 52 40 66 38 92"/><path d="M58 52 78 60 96 74"/><path d="M96 74 100 60"/><path d="M10 94h100"/><rect x="88" y="74" width="22" height="20"/>',
   hinge:'<circle cx="84" cy="34" r="7"/><path d="M80 40 52 52"/><path d="M52 52 54 92"/><path d="M70 45 72 70"/><path d="M10 94h100"/><path d="M64 70h16"/>',
@@ -156,298 +222,412 @@ var FIGS = {
   curl:'<circle cx="20" cy="50" r="7"/><path d="M27 54 62 58"/><path d="M62 58 82 48 96 58"/><path d="M10 66h104"/><rect x="90" y="60" width="18" height="6"/>',
   carry:'<circle cx="60" cy="14" r="7"/><path d="M60 21 60 56"/><path d="M60 56 50 90 M60 56 70 90"/><path d="M60 30 40 44 M60 30 80 44"/><rect x="32" y="44" width="14" height="10"/><rect x="74" y="44" width="14" height="10"/><path d="M10 94h100"/>',
   swing:'<circle cx="56" cy="18" r="7"/><path d="M56 25 54 54"/><path d="M54 54 40 70 38 92"/><path d="M54 54 72 62 76 92"/><path d="M56 32 92 20"/><path d="M10 94h100"/>',
-  couch:'<circle cx="40" cy="22" r="7"/><path d="M40 29 44 56"/><path d="M44 56 66 62"/><path d="M66 62 88 50"/><path d="M44 56 40 92"/><rect x="84" y="46" width="24" height="48"/><path d="M6 94h80"/>',
-  lungeadd:'<circle cx="50" cy="20" r="7"/><path d="M50 27 52 52"/><path d="M52 52 30 62 24 92"/><path d="M52 52 82 58 100 74"/><path d="M10 94h100"/>',
-  ninety:'<circle cx="52" cy="20" r="7"/><path d="M52 27 52 56"/><path d="M52 56 78 58 80 78"/><path d="M52 56 30 62 14 54"/><path d="M10 84h100"/>',
-  ankle:'<path d="M96 8v86"/><circle cx="40" cy="24" r="7"/><path d="M40 31 48 58"/><path d="M48 58 74 66 78 92"/><path d="M48 58 40 92"/><path d="M6 94h90"/>',
-  deep:'<circle cx="58" cy="30" r="7"/><path d="M58 37 54 58"/><path d="M54 58 74 62 72 92 M54 58 38 64 40 92"/><path d="M56 44 84 40"/><path d="M10 94h100"/>',
-  horse:'<circle cx="60" cy="18" r="7"/><path d="M60 25 60 50"/><path d="M60 50 34 58 30 92 M60 50 86 58 90 92"/><path d="M60 34 40 40 M60 34 80 40"/><path d="M10 94h100"/>',
-  bow:'<circle cx="52" cy="18" r="7"/><path d="M52 25 54 50"/><path d="M54 50 34 60 30 92"/><path d="M54 50 84 56 102 70"/><path d="M52 32 84 26"/><path d="M10 94h100"/>',
-  frog:'<circle cx="60" cy="34" r="7"/><path d="M60 41 60 62"/><path d="M60 62 32 66 24 84 M60 62 88 66 96 84"/><path d="M56 48 40 56 M64 48 80 56"/><path d="M10 90h100"/>',
-  rest:'<circle cx="22" cy="70" r="7"/><path d="M29 72 66 74"/><path d="M66 74 78 56 90 74"/><path d="M10 82h104"/><path d="M40 60c4-6 12-6 16 0" stroke-dasharray="2 4"/>',
-  glide:'<circle cx="46" cy="34" r="7"/><path d="M46 41 44 60"/><path d="M44 60 24 66 22 92 M44 60 74 64 98 78"/><path d="M10 94h100"/><path d="M82 46 100 46" stroke-dasharray="2 5"/>',
   pogo:'<circle cx="60" cy="20" r="7"/><path d="M60 27 60 54"/><path d="M60 54 54 78 M60 54 66 78"/><path d="M52 86 70 86"/><path d="M10 94h100"/><path d="M60 8 60 2" stroke-dasharray="2 3"/>',
-  legswing:'<circle cx="52" cy="16" r="7"/><path d="M52 23 52 52"/><path d="M52 52 50 92"/><path d="M52 52 84 44 M52 52 78 76" stroke-dasharray="2 5"/><path d="M52 30 30 26"/><path d="M10 94h100"/>',
-  wgs:'<circle cx="44" cy="26" r="7"/><path d="M44 33 52 54"/><path d="M52 54 34 62 30 92"/><path d="M52 54 82 60 100 76"/><path d="M48 42 44 70"/><path d="M10 94h100"/>',
-  bridge:'<circle cx="24" cy="70" r="7"/><path d="M31 72 62 56"/><path d="M62 56 74 72 76 88"/><path d="M10 92h104"/>',
   band:'<circle cx="60" cy="16" r="7"/><path d="M60 23 60 58"/><path d="M60 58 52 90 M60 58 68 90"/><path d="M60 32 30 30 M60 32 90 30"/><path d="M30 30 90 30" stroke-dasharray="3 5"/><path d="M10 94h100"/>',
   deadbug:'<circle cx="24" cy="66" r="7"/><path d="M31 68 70 70"/><path d="M52 69 46 44"/><path d="M70 70 84 52 96 58"/><path d="M60 70 70 88"/><path d="M10 80h104"/>',
-  pike:'<circle cx="30" cy="52" r="7"/><path d="M36 56 62 34"/><path d="M62 34 96 74"/><path d="M38 58 36 76"/><path d="M10 84h104"/>'
+  pike:'<circle cx="30" cy="52" r="7"/><path d="M36 56 62 34"/><path d="M62 34 96 74"/><path d="M38 58 36 76"/><path d="M10 84h104"/>',
+  bridge:'<circle cx="24" cy="70" r="7"/><path d="M31 72 62 56"/><path d="M62 56 74 72 76 88"/><path d="M10 92h104"/>',
+  machine:'<rect x="20" y="20" width="14" height="60"/><path d="M34 40h28"/><circle cx="72" cy="34" r="7"/><path d="M72 41 74 62"/><path d="M74 62 62 70 60 92 M74 62 90 70 92 92"/><path d="M70 46 46 40"/><path d="M10 94h100"/>',
+  legpress:'<rect x="80" y="20" width="12" height="46" transform="rotate(20 86 43)"/><circle cx="30" cy="56" r="7"/><path d="M37 58 58 62"/><path d="M58 62 74 48 84 38"/><path d="M50 62 50 78"/><path d="M20 84h60"/>',
+  backext:'<rect x="30" y="56" width="34" height="10" transform="rotate(-30 47 61)"/><circle cx="92" cy="30" r="7"/><path d="M87 35 62 50"/><path d="M62 50 44 66 36 82"/><path d="M78 42 80 58"/><path d="M14 90h96"/>'
 };
 
-/* ---------- exercise database ---------- */
+/* ================= exercise database ================= */
 var EX = {
-  jogskip:{n:'Easy jog + skips',fig:'sprint',s:'Any open space, 2–3 minutes.',e:'Jog easy, then mix in relaxed skips, side shuffles, and backpedal.',f:'Warmth spreading, breathing slightly up.',m:'Rushing it. This buys you quality later.'},
-  legswings:{n:'Leg swings',fig:'legswing',s:'Hold a wall or rail, stand tall on one leg.',e:'Swing the free leg front-to-back 10, then side-to-side 10. Both legs.',f:'Hips loosening a little more each swing.',m:'Arching the low back to swing higher — motion comes from the hip.'},
-  wgs:{n:"World's greatest stretch",fig:'wgs',s:'Push-up position.',e:'Step right foot outside right hand, drop the back knee, reach right arm to the sky, breathe, switch sides.',f:'A big opening through hip and mid-back at once.',m:'Front heel floating off the ground.'},
-  pogo:{n:'Pogo hops',fig:'pogo',s:'Stand tall, hands loose.',e:'Bounce off the ground like a pogo stick — stiff ankles, minimal knee bend, quick off the floor.',f:'Springy calves and feet, not tired quads.',m:'Sinking into a squat between hops. Stay tall and stiff.'},
-  hipcircles:{n:'Hip circles + ankle rocks',fig:'deep',s:'Hands and knees, then a half-kneel.',e:'Circle each hip 8× both directions, then rock the front knee over the toes 10× per side.',f:'Joints greasing up, easier range each rep.',m:'Tiny fast circles — make them slow and big.'},
-  scap:{n:'Scap push-ups + arm circles',fig:'pushup',s:'Push-up position, arms locked straight.',e:'Let the chest sink between shoulder blades, then push the floor away hard. 10 reps, then 10 big arm circles each way.',f:'Shoulder blades gliding, upper back awake.',m:'Bending the elbows — this is blades only.'},
-  broad:{n:'Broad jump',fig:'jump',s:'Flat ground, a line to jump from.',e:'Swing arms back, load hips, explode forward as far as you can. Stick the landing in a quiet half-squat. Walk back slow.',f:'Explosive off the ground, soft on landing.',m:'Landing stiff-legged or falling forward. If you cannot stick it, you jumped past your control.'},
-  boxjump:{n:'Box jump',fig:'box',s:'A sturdy box or bench, height you can land on softly with hips above knees.',e:'Big arm swing, jump, land quietly in a quarter squat on top. Step down — never jump down.',f:'Fast up, silent landing.',m:'Chasing a high box by tucking your knees. The jump matters, not the box height.'},
-  dbjump:{n:'DB jump squat',fig:'jump',s:'Hold one light-to-medium dumbbell at your chest.',e:'Dip fast to quarter-squat depth and jump as high as possible. Reset fully between reps.',f:'Max intent every rep — this is a power lift, not cardio.',m:'Grinding out tired reps. When you slow down, the set is over.'},
-  bound:{n:'Lateral bound',fig:'bound',s:'Open ground, athletic stance.',e:'Push off one leg, jump sideways as far as you can, land on the other leg and stick it for 2 seconds. Alternate.',f:'Like ranging hard for a grounder and holding your base.',m:'Wobbling on the landing. Stick it before the next bound.',tags:['hip'],alt:'pogo'},
-  plyopush:{n:'Plyo push-up',fig:'pushup',s:'Push-up position, or hands on a bench to make it easier.',e:'Lower under control, then push up so hard your hands leave the ground. Land soft, reset.',f:'A jump for your upper body.',m:'Half-range fast reps. Full lower, explosive rise.'},
-  shadow:{n:'Max-intent shadow swings',fig:'swing',s:'Your bat (or any stick), room to swing.',e:'Take your game stance and swing 100% as if a 95 mph fastball is middle-in. Full finish. Rest 20–30 sec between swings.',f:'Bat whistling. Each swing is a single all-out rep.',m:'Lazy half-speed swings. Fewer swings, more intent.'},
-  goblet:{n:'Goblet squat',fig:'squat',s:'Hold your heaviest dumbbell vertically against your chest, feet shoulder-width.',e:'Sit down between your heels, chest tall, elbows inside knees at the bottom. Drive up hard. Use a 3-second lowering to make the weight feel heavier.',f:'Whole foot rooted, quads and glutes working.',m:'Heels lifting or chest dropping — slow down and own the bottom.'},
-  bss:{n:'Bulgarian split squat (DB)',fig:'split',s:'Rear foot on a chair/couch, dumbbells at your sides. Front foot far enough forward that your knee stays over mid-foot.',e:'Lower the back knee toward the floor with control (3 sec down), drive through the front heel to stand.',f:'Front glute and quad on fire; big stretch in the rear hip flexor.',m:'Bouncing at the bottom, or leaning so far forward you tip.',tags:['hip'],alt:'sglbridge'},
-  backsquat:{n:'Back squat',fig:'squat',s:'Bar on your upper back in a rack, feet shoulder-width, whole hand around the bar.',e:'Big breath, brace, sit down to at least parallel, stand up fast. Rack height so you unrack with a small dip, not a tiptoe.',f:'Trunk like a pillar; bar speed crisp on every rep.',m:'Knees caving on the way up — screw your feet into the floor.'},
-  dbrdl:{n:'DB Romanian deadlift',fig:'hinge',s:'Dumbbells in front of your thighs, soft knees, shoulders pulled back.',e:'Push your hips straight back and slide the weights down your legs until your hamstrings say stop (usually just below the knee). Squeeze glutes to stand.',f:'A deep stretch down the back of the thighs — never the low back.',m:'Turning it into a squat by bending the knees more. Hips go BACK.'},
-  bbrdl:{n:'Barbell RDL',fig:'hinge',s:'Barbell at hip height (from a rack is easiest), double overhand or mixed grip.',e:'Same hinge as the DB version: hips back, bar drags down the thighs, flat back, glutes finish the rep.',f:'Hamstrings loading like rubber bands.',m:'Letting the bar drift away from your legs — keep it touching.'},
-  deadlift:{n:'Trap-bar or barbell deadlift',fig:'hinge',s:'Bar over mid-foot, hips higher than knees, chest proud, arms straight.',e:'Push the floor away and stand tall in one piece. Lower with control. Trap bar if the gym has one; conventional if not.',f:'Legs pressing, back rigid — one solid unit.',m:'Jerking the bar off the floor. Squeeze the slack out first, then drive.'},
-  hipthrust:{n:'Hip thrust',fig:'thrust',s:'Upper back on a bench or couch edge, feet flat, dumbbell or barbell across your hips.',e:'Drive hips up until your body is a flat table, chin tucked, 2-second squeeze at the top, lower slow.',f:'Glutes doing 90% of the work.',m:'Arching the low back at the top — finish with glutes, not spine.'},
-  sglbridge:{n:'Single-leg glute bridge',fig:'bridge',s:'On your back, one foot flat, other leg held to your chest.',e:'Drive through the heel and lift your hips to a straight line. Pause 2 sec, lower slow.',f:'One glute clearly working; hamstring may join in.',m:'Pushing through the toes — the heel is the gas pedal.'},
-  slrdl:{n:'Single-leg RDL (DB)',fig:'slrdl',s:'Dumbbell in one hand, stand on the opposite leg.',e:'Hinge forward as the free leg extends behind you; lower the weight to mid-shin, then stand and hold your balance 5 seconds.',f:'A hamstring stretch plus a real balance challenge — this is infield stability work.',m:'Hips twisting open. Keep both hip bones facing the floor.'},
-  sliders:{n:'Slider / towel hamstring curl',fig:'curl',s:'On your back, heels on a towel (hard floor) or paper plates on carpet.',e:'Bridge your hips up, slide heels away until your legs are nearly straight, then drag them back while keeping hips up.',f:'Hamstrings burning by rep 4 — that is the point.',m:'Letting hips sag to the floor mid-rep.'},
-  latlunge:{n:'Goblet lateral lunge',fig:'lungeadd',s:'Dumbbell at chest, feet wide.',e:'Shift and sit into one hip, that knee bends while the other leg stays straight. Push back to the middle.',f:'A working stretch through the groin of the straight leg — your grounder range, loaded.',m:'The bending knee diving inward. Track it over the toes.',tags:['hip'],alt:'sglbridge'},
-  cop:{n:'Copenhagen plank',fig:'cop',s:'Side plank position, top foot up on a chair or bench, bottom leg free.',e:'Lift your hips into a straight line supported by the inside of the top leg. Hold. Bend the top knee to make it easier.',f:'Deep in the groin of the top leg — the injury-proofing your adductors need.',m:'Hips sagging. Shorter clean holds beat long saggy ones.',tags:['hip'],alt:'side'},
-  side:{n:'Side plank',fig:'side',s:'Elbow under shoulder, feet stacked or staggered.',e:'Lift hips to a straight line, reach the top arm to the ceiling, breathe.',f:'The side of your trunk working, not your shoulder aching.',m:'Butt drifting backward out of line.'},
-  pallof:{n:'Pallof press (band/cable)',fig:'band',s:'Band or cable anchored at chest height, stand sideways to it, both hands at your sternum.',e:'Press your hands straight out and resist the pull trying to twist you. Hold 2 sec, return.',f:'Everything around your midsection bracing quietly.',m:'Letting the arms drift toward the anchor.'},
-  deadbug:{n:'Dead bug',fig:'deadbug',s:'On your back, arms to ceiling, knees over hips.',e:'Lower opposite arm and leg toward the floor while your low back stays glued down. Exhale as you reach.',f:'Abs holding your back flat — no rocking.',m:'Low back arching off the floor; shrink the range until it stays down.'},
-  dbfloor:{n:'DB floor press',fig:'bench',s:'Lie on the floor, dumbbells over your chest.',e:'Lower until your upper arms touch the floor, pause 1 sec, press up. Use a 3-second lowering if the DBs are light for you.',f:'Chest and triceps loading; floor protects the shoulders.',m:'Bouncing elbows off the floor.'},
-  bench:{n:'Barbell bench press',fig:'bench',s:'Eyes under the bar, feet planted, shoulder blades pinched and dug into the bench.',e:'Lower to mid-chest under control, press up and slightly back. A spotter or safety pins when going heavy.',f:'Whole body tight; the bar moves fast without wobbling.',m:'Flaring elbows straight out at 90° — keep them about 45° from your sides.'},
-  incline:{n:'Incline DB press',fig:'bench',s:'Bench at ~30°, dumbbells at shoulder height.',e:'Press up and slightly together, lower with a full stretch at the bottom.',f:'Upper chest and shoulders sharing the load.',m:'Setting the bench too steep — that turns it into a shoulder press.'},
-  pushladder:{n:'Push-up ladder',fig:'pushup',s:'Floor. Hands under shoulders, body in one line.',e:'Do 1 push-up, rest 5 breaths, do 2, rest, do 3... climb until you are 2 reps shy of failure, then climb back down.',f:'Lots of quality volume without ever grinding to failure.',m:'Hips sagging as you fatigue. When the line breaks, the ladder is over.'},
-  pike:{n:'Pike push-up',fig:'pike',s:'Push-up position, then walk feet in so hips point at the ceiling.',e:'Lower the top of your head toward the floor between your hands, press back up.',f:'Shoulders doing overhead-press work with zero equipment.',m:'Turning it into a regular push-up as you tire — keep the hips high.'},
-  sarow:{n:'Single-arm DB row',fig:'row',s:'One hand and knee on a bench or couch, flat back, DB hanging.',e:'Pull the dumbbell to your hip (not your armpit), pause, lower slow. Heaviest DB you have — go for controlled reps.',f:'Lat and mid-back doing the pulling; arm is just a hook.',m:'Twisting the torso to heave the weight up.'},
-  cablerow:{n:'Seated cable row',fig:'row',s:'Chest tall, slight lean back, handle at arms length.',e:'Pull to your sternum, squeeze the blades together 1 sec, let the weight stretch you forward.',f:'Mid-back muscles pinching hard at the end.',m:'Rocking your whole torso to move the stack.'},
-  pulldown:{n:'Lat pulldown / pull-up',fig:'pullup',s:'Grip a bit wider than shoulders. Pull-ups if there is a bar and you can do clean reps; pulldown otherwise.',e:'Pull the bar to your collarbone, elbows driving down and back, control the way up.',f:'Lats — the muscles under your armpits — doing the work.',m:'Leaning way back and pulling to your belly.'},
-  pullapart:{n:'Band pull-apart',fig:'band',s:'Your Driveline band or any light band, arms straight ahead at shoulder height.',e:'Pull the band apart until it touches your chest, squeezing the blades. Slow return.',f:'Rear shoulders and upper back burning lightly.',m:'Shrugging up toward the ears.'},
-  facepull:{n:'Band face pull',fig:'band',s:'Band anchored at face height (door, fence, rack).',e:'Pull toward your eyebrows, elbows high and wide, hands finishing beside your ears.',f:'Back of the shoulders — the throwing decelerators — working.',m:'Pulling to the chin with elbows down.'},
-  chop:{n:'Half-kneeling chop',fig:'chop',s:'Half-kneel (inside knee down), band anchored high to your side — or hold one DB with both hands.',e:'Pull/chop diagonally from high outside to low opposite hip, controlling the return. Trunk rotates; hips stay square.',f:'Your swing muscles — obliques — loading and unloading.',m:'Arms swinging while the trunk stays lazy. The trunk drives it.'},
-  farmer:{n:'Farmer / suitcase carry',fig:'carry',s:'Heaviest DBs available — both hands, or one for the harder suitcase version.',e:'Walk tall and slow, 30–40 steps. Suitcase version: do not lean away from the weight.',f:'Grip, trunk, and posture all fighting quietly.',m:'Fast sloppy steps. Slow is the work.'},
-  calfraise:{n:'Calf raise + tib raise',fig:'calf',s:'Calf: balls of feet on a step. Tib: heels on the step, toes hanging.',e:'Calf: rise to the top, 2-sec pause, 3-sec lower. Tib: lift toes toward shins, same tempo.',f:'Springs (calves) and shock absorbers (shins) both training — this is sprint-speed plumbing.',m:'Short bouncy reps with no pause.'},
-  accel10:{n:'10-yard accelerations',fig:'sprint',s:'Mark 10 yards. Start in a 2-point stagger or push-up start.',e:'Explode out low — like stealing second — and finish through the line. Walk back for 60–90 sec full rest.',f:'Big pushes into the ground, body at a lean.',m:'Popping straight up on step one. Stay low, patient, pushing.'},
-  build20:{n:'20-yard build-ups',fig:'sprint',s:'Mark 20 yards.',e:'Accelerate smoothly so you hit about 90% at the end. Full rest — a slow walk back.',f:'Fast but relaxed: jaw loose, hands loose.',m:'Straining. Tension is the enemy of speed.'},
-  fly20:{n:'Flying 20s',fig:'sprint',s:'Mark 20 yards of run-in, then a 20-yard timing zone.',e:'Build through the run-in and hit the zone at top speed. 2–3 minutes rest between reps — this is max-velocity work.',f:'Bouncing off the ground, tall hips, heels cycling under you.',m:'Doing these tired. If speed drops, you are training slowness.'},
-  walldrill:{n:'Acceleration wall drill',fig:'wall',s:'Hands on a wall/fence, body at a 45° lean, one line from head to heel.',e:'Drive one knee up, then exchange legs with a punch into the ground. Singles, then doubles, then 5-second rapid fire.',f:'The exact shape of your first three steps out of the box.',m:'Hips breaking so your butt sticks out — keep the straight line.'},
-  tempo:{n:'Tempo strides',fig:'sprint',s:'40–60 yards of grass.',e:'Run at a smooth 70% — fast but conversational mechanics — walk back, repeat.',f:'A workout that leaves you looser than it found you.',m:'Racing them. 70% means 70%.',},
-  bikesprint:{n:'Bike / rower sprints',fig:'sprint',s:'Any bike or rower at the gym.',e:'10–15 seconds absolutely all-out, then 2 minutes easy. That ratio is the whole point.',f:'Legs flooding at the end of each sprint.',m:'Medium-hard the whole time. Sprint means sprint.'},
-  driveline:{n:'Driveline arm care',fig:'band',s:'Your existing Driveline program and bands.',e:'Run it exactly as written — this plan deliberately does not duplicate it.',f:'Your normal routine.',m:'Skipping it on days you throw. It goes with every throwing day.'}
+  jogskip:{n:'Easy jog + skips',fig:['sprint'],s:'Any open space, 2-3 minutes.',e:'Jog easy, then mix in relaxed skips, side shuffles, and backpedal.',f:'Warmth spreading, breathing slightly up.',m:'Rushing it. This buys you quality later.'},
+  legswings:{n:'Leg swings',fig:['legswing'],s:'Hold a wall or rail, stand tall on one leg.',e:'Swing the free leg front-to-back 10, then side-to-side 10. Both legs.',f:'Hips loosening a little more each swing.',m:'Arching the low back to swing higher — motion comes from the hip.'},
+  wgs:{n:"World's greatest stretch",fig:['pushup','wgs'],s:'Start in a push-up position.',e:'Step your right foot up to land OUTSIDE your right hand. Drop the back knee down. Reach your right arm to the ceiling and follow it with your eyes. 2 breaths, return, switch sides.',f:'A big opening through hip and mid-back at once.',m:'Front heel floating off the ground.'},
+  pogo:{n:'Pogo hops',fig:['pogo'],s:'Stand tall, hands loose.',e:'Bounce off the ground like a pogo stick — stiff ankles, minimal knee bend, quick off the floor.',f:'Springy calves and feet, not tired quads.',m:'Sinking into a squat between hops. Stay tall and stiff.'},
+  scap:{n:'Scap push-ups + arm circles',fig:['pushup'],s:'Push-up position, arms locked straight.',e:'Let the chest sink between shoulder blades, then push the floor away hard. 10 reps, then 10 big arm circles each way.',f:'Shoulder blades gliding, upper back awake.',m:'Bending the elbows — this is blades only.'},
+  walldrill:{n:'Acceleration wall drill',fig:['wall'],s:'Hands on a wall or fence, body at a 45° lean, one straight line from head to heel.',e:'Drive one knee up, then exchange legs with a punch into the ground. Singles, then doubles, then 5 seconds rapid fire.',f:'The exact shape of your first three steps out of the box.',m:'Hips breaking so your butt sticks out — keep the straight line.'},
+  broad:{n:'Broad jump',fig:['stand','jump'],s:'Flat ground, a line to jump from.',e:'Swing arms back, load hips, explode forward as far as you can. Stick the landing in a quiet half-squat. Walk back slow.',f:'Explosive off the ground, soft on landing.',m:'Landing stiff-legged or falling forward. If you cannot stick it, you jumped past your control.'},
+  boxjump:{n:'Box jump',fig:['stand','box'],s:'A sturdy box or bench, height you can land on softly with hips above knees.',e:'Big arm swing, jump, land quietly in a quarter squat on top. Step down — never jump down.',f:'Fast up, silent landing.',m:'Chasing a high box by tucking your knees. The jump matters, not the box height.'},
+  dbjump:{n:'DB jump squat',fig:['squat','jump'],s:'Hold one light-to-medium dumbbell at your chest.',e:'Dip fast to quarter-squat depth and jump as high as possible. Reset fully between reps.',f:'Max intent every rep — this is a power lift, not cardio.',m:'Grinding out tired reps. When you slow down, the set is over.'},
+  bound:{n:'Lateral bound',fig:['bound'],s:'Open ground, athletic stance.',e:'Push off one leg, jump sideways as far as you can, land on the other leg and stick it for 2 seconds. Alternate.',f:'Like ranging hard for a grounder and holding your base.',m:'Wobbling on the landing. Stick it before the next bound.'},
+  plyopush:{n:'Plyo push-up',fig:['pushup'],s:'Push-up position, or hands on a bench to make it easier.',e:'Lower under control, then push up so hard your hands leave the ground. Land soft, reset.',f:'A jump for your upper body.',m:'Half-range fast reps. Full lower, explosive rise.'},
+  shadow:{n:'Max-intent shadow swings',fig:['swing'],s:'Your bat (or any stick), room to swing.',e:'Take your game stance and swing 100% as if a 95 mph fastball is middle-in. Full finish. Rest 20-30 sec between swings.',f:'Bat whistling. Each swing is a single all-out rep.',m:'Lazy half-speed swings. Fewer swings, more intent.'},
+  goblet:{n:'Goblet squat',fig:['stand','squat'],s:'Hold your heaviest dumbbell vertically against your chest, feet shoulder-width.',e:'Sit down between your heels over 3 slow seconds, chest tall, elbows inside knees at the bottom. Drive up hard.',f:'Whole foot rooted, quads and glutes working.',m:'Heels lifting or chest dropping — slow down and own the bottom.'},
+  bss:{n:'Bulgarian split squat (DB)',fig:['split'],s:'Rear foot on a chair or couch, dumbbells at your sides. Front foot far enough forward that your knee stays over mid-foot.',e:'Lower the back knee toward the floor over 3 slow seconds, drive through the front heel to stand.',f:'Front glute and quad on fire; big stretch in the rear hip flexor.',m:'Bouncing at the bottom, or leaning so far forward you tip.'},
+  backsquat:{n:'Back squat',fig:['stand','squat'],s:'Bar on your upper back in a rack, feet shoulder-width, whole hand around the bar.',e:'Big breath, brace, sit down to at least parallel, stand up fast.',f:'Trunk like a pillar; bar speed crisp on every rep.',m:'Knees caving on the way up — screw your feet into the floor.'},
+  dbrdl:{n:'DB Romanian deadlift',fig:['stand','hinge'],s:'Dumbbells in front of your thighs, soft knees, shoulders pulled back.',e:'Push your hips straight back and slide the weights down your legs until your hamstrings say stop (usually just below the knee). Squeeze glutes to stand.',f:'A deep stretch down the back of the thighs — never the low back.',m:'Turning it into a squat by bending the knees more. Hips go BACK.'},
+  bbrdl:{n:'Barbell RDL',fig:['stand','hinge'],s:'Barbell at hip height (from a rack is easiest).',e:'Hips back, bar drags down the thighs, flat back, glutes finish the rep.',f:'Hamstrings loading like rubber bands.',m:'Letting the bar drift away from your legs — keep it touching.'},
+  deadlift:{n:'Trap-bar or barbell deadlift',fig:['hinge','stand'],s:'Bar over mid-foot, hips higher than knees, chest proud, arms straight.',e:'Push the floor away and stand tall in one piece. Lower with control.',f:'Legs pressing, back rigid — one solid unit.',m:'Jerking the bar off the floor. Squeeze the slack out first, then drive.'},
+  hipthrust:{n:'Hip thrust',fig:['thrust'],s:'Upper back on a bench or couch edge, feet flat, dumbbell or barbell across your hips.',e:'Drive hips up until your body is a flat table, chin tucked, 2-second squeeze at the top, lower slow.',f:'Glutes doing 90% of the work.',m:'Arching the low back at the top — finish with glutes, not spine.'},
+  sglbridge:{n:'Single-leg glute bridge',fig:['bridge'],s:'On your back, one foot flat, other leg held to your chest.',e:'Drive through the heel and lift your hips to a straight line. Pause 2 sec, lower slow.',f:'One glute clearly working.',m:'Pushing through the toes — the heel is the gas pedal.'},
+  slrdl:{n:'Single-leg RDL (DB)',fig:['stand','slrdl'],s:'Dumbbell in one hand, stand on the opposite leg.',e:'Hinge forward as the free leg extends behind you; lower the weight to mid-shin, then stand and hold your balance 5 seconds.',f:'A hamstring stretch plus a real balance challenge.',m:'Hips twisting open. Keep both hip bones facing the floor.'},
+  sliders:{n:'Slider / towel hamstring curl',fig:['bridge','curl'],s:'On your back, heels on a towel (hard floor) or paper plates on carpet.',e:'Bridge your hips up, slide heels away until legs are nearly straight, drag them back with hips still up.',f:'Hamstrings burning by rep 4 — that is the point.',m:'Letting hips sag to the floor mid-rep.'},
+  latlunge:{n:'Goblet lateral lunge',fig:['stand','lungeadd'],s:'Dumbbell at chest, feet wide.',e:'Shift and sit into one hip, that knee bends while the other leg stays straight. Push back to the middle.',f:'A working stretch through the groin of the straight leg.',m:'The bending knee diving inward. Track it over the toes.'},
+  cop:{n:'Copenhagen plank',fig:['cop'],s:'Side plank position, top foot up on a chair or bench, bottom leg free.',e:'Lift your hips into a straight line supported by the inside of the top leg. Hold. Bend the top knee to make it easier.',f:'Deep in the groin of the top leg — injury-proofing for your adductors.',m:'Hips sagging. Shorter clean holds beat long saggy ones.'},
+  side:{n:'Side plank',fig:['side'],s:'Elbow under shoulder, feet stacked or staggered.',e:'Lift hips to a straight line, reach the top arm to the ceiling, breathe.',f:'The side of your trunk working.',m:'Butt drifting backward out of line.'},
+  pallof:{n:'Pallof press',fig:['band'],s:'Band or cable anchored at chest height, stand sideways to it, both hands at your sternum.',e:'Press your hands straight out and resist the pull trying to twist you. Hold 2 sec, return.',f:'Everything around your midsection bracing quietly.',m:'Letting the arms drift toward the anchor.'},
+  deadbug:{n:'Dead bug',fig:['deadbug'],s:'On your back, arms to ceiling, knees over hips.',e:'Lower opposite arm and leg toward the floor while your low back stays glued down. Exhale as you reach.',f:'Abs holding your back flat — no rocking.',m:'Low back arching off the floor; shrink the range until it stays down.'},
+  dbfloor:{n:'DB floor press',fig:['bench'],s:'Lie on the floor, dumbbells over your chest.',e:'Lower until your upper arms touch the floor, pause 1 sec, press up. Use a 3-second lowering if the DBs are light for you.',f:'Chest and triceps loading; the floor protects the shoulders.',m:'Bouncing elbows off the floor.'},
+  bench:{n:'Barbell bench press',fig:['bench'],s:'Eyes under the bar, feet planted, shoulder blades pinched and dug into the bench.',e:'Lower to mid-chest under control, press up and slightly back. A spotter or safety pins when going heavy.',f:'Whole body tight; the bar moves fast without wobbling.',m:'Flaring elbows straight out at 90° — keep them about 45° from your sides.'},
+  incline:{n:'Incline DB press',fig:['bench'],s:'Bench at about 30°, dumbbells at shoulder height.',e:'Press up and slightly together, lower with a full stretch at the bottom.',f:'Upper chest and shoulders sharing the load.',m:'Setting the bench too steep — that turns it into a shoulder press.'},
+  pushladder:{n:'Push-up ladder',fig:['pushup'],s:'Floor. Hands under shoulders, body in one line.',e:'Do 1 push-up, rest 5 breaths, do 2, rest, do 3... climb until you are 2 reps shy of failure, then climb back down.',f:'Lots of quality volume without grinding to failure.',m:'Hips sagging as you fatigue. When the line breaks, the ladder is over.'},
+  pike:{n:'Pike push-up',fig:['pike'],s:'Push-up position, then walk feet in so hips point at the ceiling.',e:'Lower the top of your head toward the floor between your hands, press back up.',f:'Shoulders doing overhead-press work with zero equipment.',m:'Turning it into a regular push-up as you tire — keep the hips high.'},
+  sarow:{n:'Single-arm DB row',fig:['row'],s:'One hand and knee on a bench or couch, flat back, DB hanging.',e:'Pull the dumbbell to your hip (not your armpit), pause, lower slow.',f:'Lat and mid-back doing the pulling; the arm is just a hook.',m:'Twisting the torso to heave the weight up.'},
+  cablerow:{n:'Seated cable row',fig:['row'],s:'Chest tall, slight lean back, handle at arms length.',e:'Pull to your sternum, squeeze the blades together 1 sec, let the weight stretch you forward.',f:'Mid-back muscles pinching hard at the end.',m:'Rocking your whole torso to move the stack.'},
+  pulldown:{n:'Lat pulldown / pull-up',fig:['pullup'],s:'Grip a bit wider than shoulders. Pull-ups if you can do clean reps; pulldown otherwise.',e:'Pull the bar to your collarbone, elbows driving down and back, control the way up.',f:'Lats — the muscles under your armpits — doing the work.',m:'Leaning way back and pulling to your belly.'},
+  pullapart:{n:'Band pull-apart',fig:['band'],s:'Your Driveline band or any light band, arms straight ahead at shoulder height.',e:'Pull the band apart until it touches your chest, squeezing the blades. Slow return.',f:'Rear shoulders and upper back burning lightly.',m:'Shrugging up toward the ears.'},
+  facepull:{n:'Band / cable face pull',fig:['band'],s:'Band or cable anchored at face height.',e:'Pull toward your eyebrows, elbows high and wide, hands finishing beside your ears.',f:'Back of the shoulders — your throwing decelerators — working.',m:'Pulling to the chin with elbows down.'},
+  chop:{n:'Half-kneeling chop',fig:['chop'],s:'Half-kneel (inside knee down), band or cable anchored high to your side — or hold one DB with both hands.',e:'Pull and chop diagonally from high outside to low opposite hip, controlling the return. Trunk rotates; hips stay square.',f:'Your swing muscles — the obliques — loading and unloading.',m:'Arms swinging while the trunk stays lazy. The trunk drives it.'},
+  farmer:{n:'Farmer / suitcase carry',fig:['carry'],s:'Heaviest DBs available — both hands, or one for the harder suitcase version.',e:'Walk tall and slow, 30-40 steps. Suitcase version: do not lean away from the weight.',f:'Grip, trunk, and posture all fighting quietly.',m:'Fast sloppy steps. Slow is the work.'},
+  calfraise:{n:'Calf raise + tib raise',fig:['calf'],s:'Calf: balls of feet on a step. Tib: heels on the step, toes hanging.',e:'Calf: rise to the top, 2-sec pause, 3-sec lower. Tib: lift toes toward shins, same tempo.',f:'Springs (calves) and shock absorbers (shins) both training — sprint-speed plumbing.',m:'Short bouncy reps with no pause.'},
+  accel10:{n:'10-yard accelerations',fig:['wall','sprint'],s:'Mark 10 yards. Start in a 2-point stagger or push-up start.',e:'Explode out low — like stealing second — and finish through the line. Walk back for 60-90 sec of full rest.',f:'Big pushes into the ground, body at a lean.',m:'Popping straight up on step one. Stay low, patient, pushing.'},
+  build20:{n:'20-yard build-ups',fig:['sprint'],s:'Mark 20 yards.',e:'Accelerate smoothly so you hit about 90% at the end. Full rest — a slow walk back.',f:'Fast but relaxed: jaw loose, hands loose.',m:'Straining. Tension is the enemy of speed.'},
+  fly20:{n:'Flying 20s',fig:['sprint'],s:'Mark 20 yards of run-in, then a 20-yard timing zone.',e:'Build through the run-in and hit the zone at top speed. 2-3 minutes of rest between reps.',f:'Bouncing off the ground, tall hips, heels cycling under you.',m:'Doing these tired. If speed drops, you are training slowness.'},
+  tempo:{n:'Tempo strides',fig:['sprint'],s:'40-60 yards of grass.',e:'Run at a smooth 70% — fast but relaxed mechanics — walk back, repeat.',f:'A workout that leaves you looser than it found you.',m:'Racing them. 70% means 70%.'},
+  bikesprint:{n:'Bike / rower sprints',fig:['sprint'],s:'Any bike or rower.',e:'10-15 seconds absolutely all-out, then 2 minutes easy. That ratio is the whole point.',f:'Legs flooding at the end of each sprint.',m:'Medium-hard the whole time. Sprint means sprint.'},
+  legpress:{n:'Leg press',fig:['legpress'],s:'Sit deep in the machine, feet shoulder-width in the middle of the platform, toes slightly out.',e:'Release the handles, lower the platform until your knees reach about 90°, then press through your whole foot back up without slamming the knees straight.',f:'Quads and glutes pushing; back stays glued to the pad.',m:'Going so deep your lower back rolls off the pad — stop where your back stays flat.'},
+  legcurl:{n:'Seated leg curl (machine)',fig:['machine'],s:'Adjust the pad to sit just above your heels, knees lined up with the machine pivot.',e:'Curl your heels down and under you, squeeze 2 seconds at the bottom, return slowly over 3 seconds.',f:'Hamstrings doing all the work — the throwing and sprinting engine.',m:'Yanking the weight with a jerk. Slow and squeezed beats heavy and sloppy.'},
+  backext:{n:'45° back extension',fig:['backext'],s:'Set the pad at your hip crease so your hips can fold freely; hook your heels under the rollers.',e:'Fold forward at the hips with a flat back, then squeeze your glutes to rise until your body makes one straight line. Stop there — do not arch past straight. Hold a DB at your chest to load it.',f:'Glutes and hamstrings lifting you, low back just holding steady.',m:'Swinging up past straight into an arch — finish at one line, no higher.'},
+  machinechest:{n:'Machine chest press',fig:['machine'],s:'Set the seat so the handles line up with mid-chest. Feet planted.',e:'Press the handles until your arms are nearly straight (do not slam the elbows locked), then return slowly until you feel a stretch across your chest.',f:'Chest and triceps pressing; shoulder blades stay pulled back into the pad.',m:'Letting the shoulders roll forward off the pad at the end of the press.'},
+  machinesp:{n:'Machine shoulder press',fig:['machine'],s:'Seat height so the handles start at shoulder level.',e:'Press up until arms are nearly straight, lower with control back to shoulder height.',f:'Shoulders working, trunk quiet.',m:'Arching the back to grind out reps — lighten it and stay tall.'},
+  driveline:{n:'Driveline arm care',fig:['band'],s:'Your existing Driveline program and bands.',e:'Run it exactly as written — this plan deliberately does not duplicate it.',f:'Your normal routine.',m:'Skipping it on days you throw. It goes with every throwing day.'}
 };
 
-/* ---------- mobility flow (daily, ~23 min) ---------- */
+/* ================= mobility flow ================= */
+/* tier 1 = Short (~10 min) · tier 2 also in Medium (~16) · tier 3 only in Long (~23) */
 var FLOW = [
-  {n:'Standing breath + arm float',t:'flow',d:60,fig:'horse',c:'Feet under hips. Inhale — arms float up. Exhale — they sink. Slow, like moving through water.'},
-  {n:'Hip circles + ankle rocks',t:'flow',d:60,fig:'deep',c:'Half-kneeling: big slow hip circles, then rock the knee over the toes. Switch halfway.'},
-  {n:'Horse-stance shifts',t:'flow',d:90,fig:'horse',c:'Wide stance, sink low. Pour your weight fully left, then fully right. Grounder-ready base, slow motion.'},
-  {n:'Bow-stance transitions',t:'flow',d:90,fig:'bow',c:'Rotate from horse stance into a front lunge line, sink, rotate back through center to the other side.'},
-  {n:'Flowing low lunge — left',t:'flow',d:45,fig:'lungeadd',c:'Left foot forward, back knee hovers. Small pulses, sinking deeper each breath.'},
-  {n:'Couch stretch — LEFT',t:'hold',d:90,fig:'couch',c:'Left foot down, right foot up the wall/couch. Ribs down, glute on. Breathe into the stretch — 6/10 max.'},
-  {n:'Shake out + leg swings',t:'flow',d:45,fig:'legswing',c:'Stand, shake the legs loose, easy front-back swings.'},
-  {n:'Couch stretch — RIGHT',t:'hold',d:90,fig:'couch',c:'Switch sides. Long exhales. Let the front of the hip give up its grip.'},
-  {n:'Deep lunge + adductor lean — L',t:'hold',d:60,fig:'lungeadd',c:'Low lunge, left foot forward. Shift hips out to the left so the groin loads.'},
-  {n:'Deep lunge + adductor lean — R',t:'hold',d:60,fig:'lungeadd',c:'Switch. Keep the front heel heavy.'},
-  {n:'Frog rocks',t:'flow',d:60,fig:'frog',c:'Knees wide, on forearms. Rock slowly back toward your heels and forward again. Never force.'},
-  {n:'90/90 slow switches',t:'flow',d:60,fig:'ninety',c:'Seated, legs windshield-wiper from one 90/90 side to the other. Slow, tall chest.'},
-  {n:'90/90 hold — LEFT front',t:'hold',d:60,fig:'ninety',c:'Chest tall over the left shin. Breathe. This owns your hip rotation.'},
-  {n:'90/90 hold — RIGHT front',t:'hold',d:60,fig:'ninety',c:'Switch sides. Sit tall — slouching steals the stretch.'},
-  {n:'Wall ankle hold — LEFT',t:'hold',d:60,fig:'ankle',c:'Left toes a hand-width from the wall. Drive the knee to the wall, heel welded down.'},
-  {n:'Wall ankle hold — RIGHT',t:'hold',d:60,fig:'ankle',c:'Switch. Ankles are the bottom of the chain — they unlock the squat.'},
-  {n:'Supported deep squat',t:'hold',d:90,fig:'deep',c:'Hold a rail/doorframe/tree. Sink butt to heels, heels flat. Less hand support every week.'},
-  {n:'Low lateral glides',t:'flow',d:60,fig:'glide',c:'Stay low, travel side to side like ranging to the backhand. Smooth, quiet feet.'},
-  {n:'Constructive rest + psoas breathing',t:'breathe',d:180,fig:'rest',c:'On your back, knees bent, feet flat. Belly breaths: in 4 sec, out 8 sec. Let everything drain.'}
+  {k:'breath',n:'Standing breath + arm float',t:'flow',d:60,tier:1,frames:[['stand','Exhale down'],['armsup','Inhale up']],
+   c:'Arms float up as you breathe in, sink as you breathe out. Slow, like moving through water.',
+   steps:['Stand with feet directly under your hips, knees soft (not locked).','As you breathe IN through your nose for 4 seconds, let your arms float up in front of you to shoulder height, palms down.','As you breathe OUT slowly for 6-8 seconds, let the arms sink back down like they are resting on water.','Repeat the whole time. Each exhale, feel your shoulders and belly un-clench a little more.']},
+  {k:'hipcircle',n:'Hip circles + ankle rocks',t:'flow',d:60,tier:3,frames:[['quad','Circles on all 4s'],['wgs','Rock knee fwd']],
+   c:'Big slow circles from all fours, then rock the front knee over the toes.',
+   steps:['Get on hands and knees. Keeping the knee bent, lift your right knee slightly and draw the biggest SLOW circle you can with it — 5 circles forward, 5 backward. Switch legs.','Now step your right foot forward next to your right hand (a low lunge with the back knee down).','Keeping the front heel flat, rock your front knee forward over your toes and back, 8 slow times. Switch sides.']},
+  {k:'horse',n:'Horse-stance weight shifts',t:'flow',d:90,tier:2,frames:[['horse','Center, sink low'],['horseL','Pour weight over']],
+   c:'Wide and low. Pour all your weight to one side, then the other. Grounder base in slow motion.',
+   steps:['Stand with feet wider than shoulders (about 1.5x), toes pointed slightly out.','Bend both knees and sink your hips straight down a few inches — like a fielding-ready position. Chest stays tall.','Slowly shift ALL of your weight over your right foot: the right knee bends more while the left leg straightens. Take 3 full seconds to get there.','Pause 1 second, then pour slowly across to the left side the same way. Keep your hips at the same low height the whole time — do not bob up and down.']},
+  {k:'bow',n:'Bow-stance transitions',t:'flow',d:90,tier:3,frames:[['horse','Wide horse'],['bow','Turn + sink to lunge']],
+   c:'Rotate from the wide stance into a front-lunge line, sink, and come back through the middle.',
+   steps:['Start in your wide horse stance from the last move.','Turn your whole body to face right: pivot on your heels so your right leg becomes a FRONT lunge leg (knee bent over the foot) and your left leg is nearly straight behind you.','Sink an inch deeper into the front leg for one breath — arms reach gently forward like finishing a throw.','Rotate back through center to the horse stance, then repeat to the LEFT. Keep alternating, slow and smooth, no stopping.']},
+  {k:'lowlunge',n:'Flowing low lunge',t:'flow',d:60,tier:3,frames:[['wgs','Set the lunge'],['lungeadd','Sink + pulse']],
+   c:'Back knee hovers. Small slow pulses, sinking a little deeper with each exhale.',
+   steps:['Step your right foot far forward into a long lunge; back leg reaches behind you, back knee hovering just off the floor (put it down if you need a break).','Put both hands on your front thigh, chest tall.','Tuck your tailbone slightly (like tucking your shirt in behind), then let your hips sink down-and-forward one inch as you exhale. Ease back up half an inch as you inhale.','Keep pulsing slowly with your breath. Switch legs halfway through the timer.']},
+  {k:'couchL',n:'Couch stretch — LEFT hip',t:'hold',d:90,tier:1,frames:[['kneelwall','Foot up the wall'],['couch','Hips fwd, ribs down']],
+   c:'Squeeze the back glute, ribs down. 6/10 stretch, never sharp.',
+   steps:['Kneel facing AWAY from a wall or couch. Put your LEFT knee on the floor close to the wall, and slide your left shin and foot UP the wall behind you (toes pointing up).','Step your RIGHT foot flat on the floor in front of you.','Now the money move: squeeze your LEFT butt cheek and gently push your hips forward — do NOT arch your lower back. Keep your ribs pulled down like you are bracing for a poke.','Hands on the front knee or the floor, whichever lets you stay tall. Breathe slow. You should feel the front of the LEFT hip and thigh at a 6/10 stretch — never sharp pain.']},
+  {k:'shake',n:'Shake out + leg swings',t:'flow',d:45,tier:3,frames:[['stand','Shake loose'],['legswing','Easy swings']],
+   c:'Reset. Shake the legs, easy swings, no forcing.',
+   steps:['Stand up and shake each leg loose for a few seconds, like shaking water off.','Hold the wall with one hand. Swing the outside leg easily front-to-back like a pendulum, 8-10 times. Switch.','This is a breather between the two big holds — keep everything relaxed.']},
+  {k:'couchR',n:'Couch stretch — RIGHT hip',t:'hold',d:90,tier:1,frames:[['kneelwall','Foot up the wall'],['couch','Hips fwd, ribs down']],
+   c:'Same as the left: back glute on, ribs down, 6/10 stretch.',
+   steps:['Switch sides: RIGHT knee close to the wall, right shin up the wall, LEFT foot flat in front.','Squeeze the RIGHT glute, tuck the ribs down, hips gently forward.','Long slow exhales. Every exhale, see if the hip gives you one more millimeter for free — never force it.']},
+  {k:'addL',n:'Deep lunge + groin lean — LEFT',t:'hold',d:60,tier:2,frames:[['wgs','Low lunge'],['lungeadd','Shift hips toward front leg']],
+   c:'Shift the hips sideways until the inner thigh of the straight leg pulls. 6/10.',
+   steps:['Set up a low lunge: LEFT foot forward flat on the floor, RIGHT knee on the ground behind you with that leg stretched long.','Now slowly slide your hips SIDEWAYS toward the left (toward your front-leg side), letting the back leg straighten.','You are looking for a pull along the INNER THIGH and groin of the right (back) leg. Stop at 6/10.','Hold and breathe. Hands on the floor inside the front foot for balance.']},
+  {k:'addR',n:'Deep lunge + groin lean — RIGHT',t:'hold',d:60,tier:2,frames:[['wgs','Low lunge'],['lungeadd','Shift hips toward front leg']],
+   c:'Switch sides. Slow breaths into the inner thigh.',
+   steps:['Switch: RIGHT foot forward, LEFT knee down and leg long behind.','Slide the hips sideways toward the right until the LEFT inner thigh pulls at 6/10.','Hold, breathe slow, sink a hair deeper on each exhale if it is given freely.']},
+  {k:'frog',n:'Frog rocks',t:'flow',d:60,tier:3,frames:[['frog','Knees wide'],['frogback','Rock hips back']],
+   c:'Knees wide, rock the hips back toward the heels and forward. Never force.',
+   steps:['On all fours, spread your knees as wide as comfortable. Turn your feet outward so the INSIDE edges of your feet rest on the floor, shins parallel.','Lower to your forearms if you can.','Slowly rock your hips straight BACK toward your heels until the groin says 6/10, then rock forward again. One rock every 3-4 seconds.','Keep your back flat — the movement is hips only.']},
+  {k:'nnswitch',n:'90/90 slow switches',t:'flow',d:60,tier:3,frames:[['ninety','One side'],['ninety','Sweep knees to other side']],
+   c:'Windshield-wiper the knees from one side to the other. Chest tall.',
+   steps:['Sit on the floor. Bend your RIGHT leg in FRONT of you at 90° (shin across your body) and your LEFT leg to the SIDE at 90° (shin behind you). This is the 90/90 position.','Sit as tall as you can — imagine a string pulling the top of your head up.','Keeping both feet roughly where they are, lift both knees together and sweep them over to the other side, so the LEFT leg is now in front. Slow — take 3 seconds per switch.','Keep switching sides with control. Hands can rest lightly on the floor behind you.']},
+  {k:'nnL',n:'90/90 hold — LEFT leg front',t:'hold',d:60,tier:2,frames:[['ninety','Sit tall'],['ninetylean','Lean chest over shin']],
+   c:'Tall chest, hinge over the front shin. Feel the outside of the front hip.',
+   steps:['Settle into 90/90 with the LEFT leg in front (left shin sideways across your body), right leg out to the side.','Sit tall first. Then hinge your whole flat chest FORWARD over the middle of the left shin — reach the chest out, not the head down.','You should feel it in the OUTSIDE of the left hip and deep in the glute, 6/10.','Hold and breathe. If you tip over, put your hands on the floor in front of the shin.']},
+  {k:'nnR',n:'90/90 hold — RIGHT leg front',t:'hold',d:60,tier:2,frames:[['ninety','Sit tall'],['ninetylean','Lean chest over shin']],
+   c:'Switch sides. Chest reaches forward, spine long.',
+   steps:['Sweep the legs across so the RIGHT leg is now in front.','Sit tall, then hinge the chest forward over the right shin until the outside of the right hip loads at 6/10.','Hold. Long exhales sink you deeper for free.']},
+  {k:'ankleL',n:'Wall ankle hold — LEFT',t:'hold',d:60,tier:1,frames:[['ankle','Toes near wall'],['ankle','Drive knee to wall']],
+   c:'Heel welded down. Knee drives over the toes toward the wall.',
+   steps:['Face a wall. Put your LEFT foot flat on the floor with the toes about 4 inches (a hand-width) from the wall. Right leg steps back for balance.','Keeping the LEFT heel pressed hard into the floor, drive your left KNEE straight forward until it touches (or reaches toward) the wall.','If the knee touches easily, scoot the foot back an inch. If the heel pops up, move it closer.','Hold at the deepest point where the heel STAYS down. You will feel a stretch low in the calf and the front of the ankle.']},
+  {k:'ankleR',n:'Wall ankle hold — RIGHT',t:'hold',d:60,tier:1,frames:[['ankle','Toes near wall'],['ankle','Drive knee to wall']],
+   c:'Same on the right. Ankles unlock the deep squat.',
+   steps:['Switch: RIGHT toes a hand-width from the wall.','Heel welded down, right knee drives forward toward the wall.','Hold at the deepest honest point. This is the bottom of your Deep Front Line — it unlocks everything above it.']},
+  {k:'deepsquat',n:'Supported deep squat',t:'hold',d:90,tier:1,frames:[['stand','Hold support'],['deep','Sink, heels flat']],
+   c:'Butt to heels, heels flat, chest tall. Less hand support every week.',
+   steps:['Stand facing something solid you can hold — a doorframe, rail, or heavy table. Feet shoulder-width, toes slightly out.','Holding on with both hands, slowly sink your butt ALL the way down toward your heels.','The two rules: heels stay FLAT on the floor, and chest stays as tall as you can make it.','Use your hands as little as you can get away with. Hang out in the bottom and breathe — this position IS the test we are chasing (30 seconds free-standing).']},
+  {k:'glide',n:'Low lateral glides',t:'flow',d:60,tier:2,frames:[['glide','Stay low'],['glide','Slide across']],
+   c:'Stay low, travel side to side. Ranging to the backhand, smooth and quiet.',
+   steps:['Get into a half-depth squat — the height you field a grounder from. Chest up, eyes forward like watching a hitter.','Staying at exactly that height, step sideways: right foot reaches, left foot follows. Two steps right, then two steps left.','Move slowly and smoothly — imagine a glass of water balanced on your back.','Your legs will burn a little. That is the fielding-position strength being built.']},
+  {k:'rest',n:'Constructive rest + psoas breathing',t:'breathe',d:180,tier:1,frames:[['rest','Knees bent, breathe slow']],
+   c:'In through the nose 4 sec, out 8 sec. Let the hips fully let go.',
+   steps:['Lie on your back. Bend your knees so your feet are flat on the floor, hip-width apart, about a foot from your butt. Arms rest at your sides.','Let your lower back settle to its natural position — do not press it down or arch it.','Breathe IN through your nose for 4 seconds, sending the air to your BELLY (it should rise before your chest does).','Breathe OUT slowly for 8 seconds, like fogging a mirror. Pause 2 seconds. Repeat.','Your deepest hip muscle (the psoas) attaches to your breathing muscle. Slow exhales literally tell it to let go — this is why we end here every day.']}
 ];
 
-/* ---------- weekly plan ---------- */
-function it(x,rx,rest){return {x:x,rx:rx,rest:rest||''}}
-var WU_LIFT = {n:'Warm-up · ~8 min',items:[it('jogskip','2–3 min'),it('legswings','10 each way/leg'),it('wgs','5/side'),it('pogo','2×15')]};
-var WU_UP = {n:'Warm-up · ~8 min',items:[it('jogskip','2–3 min'),it('scap','10 + 10'),it('wgs','5/side'),it('pullapart','15')]};
-var WU_SPEED = {n:'Warm-up · ~12 min',items:[it('jogskip','3–4 min'),it('legswings','10 each way/leg'),it('wgs','5/side'),it('walldrill','3×5/leg'),it('pogo','2×15'),it('build20','2 easy')]};
+/* ================= locations & plans ================= */
+var LOCS = [
+  {id:'co', n:'CO (vacation)', subs:[['house','House (DBs)'],['gym','Town gym'],['field','Field']]},
+  {id:'home', n:'Home', subs:null},
+  {id:'truett', n:'Truett', subs:null},
+  {id:'fl', n:'FL (machines)', subs:null}
+];
+function profileFor(loc,sub){
+  if(loc==='co') return sub==='gym'?'full':(sub==='field'?'field':'db');
+  if(loc==='fl') return 'machines';
+  return 'full';
+}
+/* it(exercise, rx, rest, pr) — pr 1 = kept in Short */
+function it(x,rx,rest,pr){return {x:x,rx:rx,rest:rest||'',pr:pr||2}}
+var WU_LIFT=[it('jogskip','2-3 min','',1),it('legswings','10 each way/leg','',1),it('wgs','5/side','',1),it('pogo','2×15','',1)];
+var WU_UP=[it('jogskip','2-3 min','',1),it('scap','10 + 10','',1),it('wgs','5/side','',1),it('pullapart','15','',1)];
+var WU_SPEED=[it('jogskip','3-4 min','',1),it('legswings','10 each way/leg','',1),it('wgs','5/side','',1),it('walldrill','3×5/leg','',1),it('pogo','2×15','',1)];
 
 var DAYS = {
-  1:{t:'Lower Power',g:'Jump hard, squat strong, protect the groin.',loc:{
-    home:[WU_LIFT,
-      {n:'Power',items:[it('broad','4×3','walk-back rest'),it('bound','3×4/side','60s')]},
-      {n:'Strength',items:[it('bss','4×6/side · 3-sec lower','2 min'),it('goblet','3×10 · 3-sec lower','90s')]},
-      {n:'Accessories',items:[it('latlunge','3×8/side','60s'),it('cop','3×15–20s/side','45s'),it('side','2×30s/side','30s')]}],
-    gym:[WU_LIFT,
-      {n:'Power',items:[it('boxjump','4×3','90s'),it('bound','3×4/side','60s')]},
-      {n:'Strength',items:[it('backsquat','4×5 · leave 1–2 reps in the tank','2–3 min'),it('bbrdl','3×8','2 min')]},
-      {n:'Accessories',items:[it('latlunge','3×8/side','60s'),it('cop','3×15–20s/side','45s'),it('pallof','3×10/side','45s')]}],
-    field:[WU_SPEED,
-      {n:'Power',items:[it('broad','5×3','walk-back'),it('bound','4×4/side','60s'),it('boxjump','on bleachers: 3×3','90s')]},
-      {n:'Strength (bodyweight)',items:[it('bss','4×8/side on a bench · 3-sec lower','90s'),it('sglbridge','3×10/side','60s')]},
-      {n:'Accessories',items:[it('cop','3×15s/side on a bench','45s'),it('side','2×30s/side','30s')]}]},
-    bonus:{n:'Feeling-strong add-on',items:[it('dbjump','3×5','90s'),it('farmer','3×40 steps','60s')]}},
-  2:{t:'Upper Push + Rotation',g:'Press strong, swing violent.',loc:{
-    home:[WU_UP,
-      {n:'Power',items:[it('plyopush','4×5','90s'),it('shadow','3×5 · 100% intent','30s between swings')]},
-      {n:'Strength',items:[it('dbfloor','4×8 · 3-sec lower','2 min'),it('pike','3×8–10','90s')]},
-      {n:'Accessories',items:[it('chop','3×8/side','60s'),it('pullapart','3×15','30s'),it('deadbug','3×6/side','45s')]}],
-    gym:[WU_UP,
-      {n:'Power',items:[it('plyopush','4×5','90s'),it('shadow','3×5 · 100% intent','30s between')]},
-      {n:'Strength',items:[it('bench','4×5 · leave 1–2 in the tank','2–3 min'),it('incline','3×8','90s')]},
-      {n:'Accessories',items:[it('chop','3×8/side (cable)','60s'),it('facepull','3×12','45s'),it('pallof','3×10/side','45s')]}],
-    field:[WU_UP,
-      {n:'Power',items:[it('plyopush','5×5','90s'),it('shadow','4×5 · 100% intent','30s between')]},
-      {n:'Strength (bodyweight)',items:[it('pushladder','1 ladder up + down','5 breaths per rung'),it('pike','3×8','90s')]},
-      {n:'Accessories',items:[it('chop','3×8/side (band on fence)','60s'),it('pullapart','3×15','30s')]}]},
-    bonus:{n:'Feeling-strong add-on',items:[it('sarow','2 extra sets ×10','90s'),it('farmer','3×40 steps','60s')]},arm:true},
-  3:{t:'Speed Day',g:'Sprint fast, rest long. This is where 6.9 becomes 6.8.',loc:{
-    home:[{n:'Warm-up · ~12 min',items:[it('jogskip','3–4 min'),it('legswings','10 each way/leg'),it('walldrill','3×5/leg'),it('pogo','2×15')]},
-      {n:'Speed (yard/driveway/street)',items:[it('accel10','6×10 yd','walk back slow'),it('bound','3×4/side','60s'),it('pogo','3×15','60s')]},
-      {n:'Optional',items:[it('tempo','4×40 yd smooth','walk back')]}],
-    gym:[{n:'Warm-up',items:[it('jogskip','3–4 min'),it('legswings','10 each way/leg'),it('walldrill','3×5/leg')]},
-      {n:'Speed (indoor)',items:[it('bikesprint','6×12 sec all-out','2 min easy between'),it('bound','3×4/side','60s'),it('boxjump','3×3','90s')]}],
-    field:[WU_SPEED,
-      {n:'Speed',items:[it('accel10','4×10 yd','60–90s'),it('build20','3×20 yd','walk back'),it('fly20','2×flying 20','2–3 min'),it('bound','3×4/side','60s')]},
-      {n:'Optional',items:[it('tempo','4×50 yd smooth','walk back')]}]},
-    bonus:{n:'Feeling-strong add-on',items:[it('fly20','1 extra flying 20','full rest'),it('broad','3×3','walk-back')]}},
-  4:{t:'Lower Hinge',g:'Hamstrings and glutes — the engine of sprinting and throwing.',loc:{
-    home:[WU_LIFT,
-      {n:'Power',items:[it('broad','3×3','walk-back'),it('shadow','2×5 · 100% intent','30s between')]},
-      {n:'Strength',items:[it('dbrdl','4×8 · 3-sec lower','2 min'),it('hipthrust','3×10 (DB on hips, back on couch)','90s'),it('slrdl','3×6/side','60s')]},
-      {n:'Accessories',items:[it('sliders','3×6','60s'),it('calfraise','3×12 each','45s')]}],
-    gym:[WU_LIFT,
-      {n:'Power',items:[it('boxjump','3×3','90s')]},
-      {n:'Strength',items:[it('deadlift','4×5 · crisp, never grinding','2–3 min'),it('hipthrust','3×8 heavy','90s'),it('slrdl','3×6/side','60s')]},
-      {n:'Accessories',items:[it('sliders','3×6','60s'),it('calfraise','3×12 each','45s')]}],
-    field:[WU_SPEED,
-      {n:'Power',items:[it('broad','4×3','walk-back'),it('bound','3×4/side','60s')]},
-      {n:'Strength (bodyweight)',items:[it('slrdl','4×8/side (no weight, 5-sec balance)','60s'),it('sglbridge','3×12/side','60s'),it('sliders','3×6 (towel on smooth bleacher)','60s')]},
-      {n:'Accessories',items:[it('calfraise','3×15 each on a step','45s')]}]},
-    bonus:{n:'Feeling-strong add-on',items:[it('farmer','3×40 steps heavy','60s'),it('hipthrust','1 extra top set ×6','')]}},
-  5:{t:'Upper Pull + Rotation',g:'Build the back that decelerates your arm — then swing.',loc:{
-    home:[WU_UP,
-      {n:'Power',items:[it('shadow','4×5 · 100% intent','30s between'),it('plyopush','3×5','90s')]},
-      {n:'Strength',items:[it('sarow','4×8/side · heaviest DB','90s'),it('dbfloor','3×10','90s')]},
-      {n:'Accessories',items:[it('chop','3×8/side','60s'),it('facepull','3×12','45s'),it('side','2×30s/side','30s')]}],
-    gym:[WU_UP,
-      {n:'Power',items:[it('shadow','4×5 · 100% intent','30s between'),it('plyopush','3×5','90s')]},
-      {n:'Strength',items:[it('pulldown','4×6','2 min'),it('cablerow','3×10','90s'),it('incline','3×8','90s')]},
-      {n:'Accessories',items:[it('chop','3×8/side (cable)','60s'),it('facepull','3×12','45s')]}],
-    field:[WU_UP,
-      {n:'Power',items:[it('shadow','5×5 · 100% intent','30s between'),it('plyopush','4×5','90s')]},
-      {n:'Strength (bodyweight)',items:[it('pulldown','pull-ups on a bar if the field has one: 4×max clean reps','2 min'),it('pushladder','1 ladder','5 breaths/rung')]},
-      {n:'Accessories',items:[it('chop','3×8/side (band)','60s'),it('pullapart','3×15','30s')]}]},
-    bonus:{n:'Feeling-strong add-on',items:[it('farmer','3×40 steps','60s'),it('deadbug','2×8/side','45s')]},arm:true}
+  1:{t:'Lower Power',g:'Jump hard, squat strong, protect the groin.',
+    p:{
+      db:{wu:WU_LIFT,main:[it('broad','4×3','walk-back',1),it('bound','3×4/side','60s'),it('bss','4×6/side · 3-sec lower','2 min',1),it('goblet','3×10 · 3-sec lower','90s'),it('latlunge','3×8/side','60s'),it('cop','3×15-20s/side','45s')]},
+      full:{wu:WU_LIFT,main:[it('boxjump','4×3','90s',1),it('bound','3×4/side','60s'),it('backsquat','4×5 · leave 1-2 in the tank','2-3 min',1),it('bbrdl','3×8','2 min'),it('latlunge','3×8/side','60s'),it('cop','3×15-20s/side','45s')]},
+      field:{wu:WU_SPEED,main:[it('broad','5×3','walk-back',1),it('bound','4×4/side','60s',1),it('bss','4×8/side on a bench','90s'),it('sglbridge','3×10/side','60s'),it('cop','3×15s/side on a bench','45s')]},
+      machines:{wu:WU_LIFT,main:[it('broad','4×3 (outside or open floor)','walk-back',1),it('legpress','4×8','2 min',1),it('legcurl','3×10','90s'),it('latlunge','3×8/side','60s'),it('cop','3×15-20s/side','45s')]}
+    },
+    bonus:[it('dbjump','3×5','90s'),it('farmer','3×40 steps','60s')]},
+  2:{t:'Upper Push + Rotation',g:'Press strong, swing violent.',arm:true,
+    p:{
+      db:{wu:WU_UP,main:[it('plyopush','4×5','90s',1),it('shadow','3×5 · 100% intent','30s between',1),it('dbfloor','4×8 · 3-sec lower','2 min',1),it('pike','3×8-10','90s'),it('chop','3×8/side','60s'),it('deadbug','3×6/side','45s')]},
+      full:{wu:WU_UP,main:[it('plyopush','4×5','90s',1),it('shadow','3×5 · 100% intent','30s between',1),it('bench','4×5 · leave 1-2 in the tank','2-3 min',1),it('incline','3×8','90s'),it('chop','3×8/side (cable)','60s'),it('facepull','3×12','45s')]},
+      field:{wu:WU_UP,main:[it('plyopush','5×5','90s',1),it('shadow','4×5 · 100% intent','30s between',1),it('pushladder','1 ladder up + down','5 breaths/rung',1),it('pike','3×8','90s'),it('chop','3×8/side (band on fence)','60s')]},
+      machines:{wu:WU_UP,main:[it('plyopush','4×5','90s',1),it('shadow','3×5 · 100% intent','30s between',1),it('machinechest','4×8','2 min',1),it('machinesp','3×10','90s'),it('chop','3×8/side (cable)','60s'),it('facepull','3×12','45s')]}
+    },
+    bonus:[it('sarow','2 extra sets ×10','90s'),it('farmer','3×40 steps','60s')]},
+  3:{t:'Speed Day',g:'Sprint fast, rest long. This is where 6.9 becomes 6.8.',
+    p:{
+      db:{wu:WU_SPEED,main:[it('accel10','6×10 yd (driveway/street)','walk back',1),it('bound','3×4/side','60s',1),it('pogo','3×15','60s'),it('tempo','4×40 yd smooth','walk back')]},
+      full:{wu:WU_SPEED,main:[it('bikesprint','6×12 sec all-out','2 min easy',1),it('bound','3×4/side','60s',1),it('boxjump','3×3','90s')]},
+      field:{wu:WU_SPEED,main:[it('accel10','4×10 yd','60-90s',1),it('build20','3×20 yd','walk back',1),it('fly20','2× flying 20','2-3 min',1),it('bound','3×4/side','60s'),it('tempo','4×50 yd smooth','walk back')]},
+      machines:{wu:WU_SPEED,main:[it('bikesprint','6×12 sec all-out','2 min easy',1),it('bound','3×4/side (open floor)','60s',1),it('pogo','3×15','60s')]}
+    },
+    bonus:[it('fly20','1 extra flying 20','full rest'),it('broad','3×3','walk-back')]},
+  4:{t:'Lower Hinge',g:'Hamstrings and glutes — the engine of sprinting and throwing.',
+    p:{
+      db:{wu:WU_LIFT,main:[it('broad','3×3','walk-back',1),it('dbrdl','4×8 · 3-sec lower','2 min',1),it('hipthrust','3×10 (DB on hips)','90s'),it('slrdl','3×6/side','60s',1),it('sliders','3×6','60s'),it('calfraise','3×12 each','45s')]},
+      full:{wu:WU_LIFT,main:[it('boxjump','3×3','90s',1),it('deadlift','4×5 · crisp, never grinding','2-3 min',1),it('hipthrust','3×8 heavy','90s'),it('slrdl','3×6/side','60s',1),it('sliders','3×6','60s'),it('calfraise','3×12 each','45s')]},
+      field:{wu:WU_SPEED,main:[it('broad','4×3','walk-back',1),it('bound','3×4/side','60s'),it('slrdl','4×8/side (no weight, 5-sec balance)','60s',1),it('sglbridge','3×12/side','60s'),it('calfraise','3×15 each on a step','45s')]},
+      machines:{wu:WU_LIFT,main:[it('broad','3×3 (open floor)','walk-back',1),it('backext','4×8 (hold a DB)','2 min',1),it('legcurl','3×10','90s',1),it('hipthrust','3×10 (DB)','90s'),it('slrdl','3×6/side','60s'),it('calfraise','3×12 each','45s')]}
+    },
+    bonus:[it('farmer','3×40 steps heavy','60s'),it('hipthrust','1 extra top set ×6','')]},
+  5:{t:'Upper Pull + Rotation',g:'Build the back that decelerates your arm — then swing.',arm:true,
+    p:{
+      db:{wu:WU_UP,main:[it('shadow','4×5 · 100% intent','30s between',1),it('plyopush','3×5','90s'),it('sarow','4×8/side · heaviest DB','90s',1),it('dbfloor','3×10','90s'),it('chop','3×8/side','60s'),it('facepull','3×12','45s')]},
+      full:{wu:WU_UP,main:[it('shadow','4×5 · 100% intent','30s between',1),it('plyopush','3×5','90s'),it('pulldown','4×6','2 min',1),it('cablerow','3×10','90s'),it('incline','3×8','90s'),it('chop','3×8/side (cable)','60s')]},
+      field:{wu:WU_UP,main:[it('shadow','5×5 · 100% intent','30s between',1),it('plyopush','4×5','90s',1),it('pulldown','pull-ups if there is a bar: 4×max clean','2 min'),it('pushladder','1 ladder','5 breaths/rung'),it('chop','3×8/side (band)','60s')]},
+      machines:{wu:WU_UP,main:[it('shadow','4×5 · 100% intent','30s between',1),it('plyopush','3×5','90s'),it('pulldown','4×8','2 min',1),it('cablerow','3×10','90s',1),it('incline','3×8 (DBs)','90s'),it('facepull','3×12','45s')]}
+    },
+    bonus:[it('farmer','3×40 steps','60s'),it('deadbug','2×8/side','45s')]}
 };
 
-var FEELNOTES = {
-  normal:'',
-  hips:'Hips are talking — listen. Lower-body lifts: do <b>one fewer set</b> and stop shy of grinding. Marked exercises below have been swapped to gentler ones. Tonight, do the mobility flow slow and make the psoas breathing 5 minutes.',
-  strong:'Green light. Do the full session, then hit the add-on block at the bottom. On your main strength lift, add one extra top set if the bar speed is crisp.',
-  low:'Minimum effective dose today: warm-up, then <b>2 sets of the first exercise in each block</b>, skip the rest. Showing up tired and doing 40% beats zero. The mobility flow still happens.',
-  time:'Express (~25 min): warm-up cut to 5 minutes, first exercise of Power and Strength at full sets, one accessory. Done. Better a short session than a skipped one.'
-};
+/* ================= foods ================= */
+var FOODS = [
+  {n:'My protein shake (banana, milk, 2 scoops whey, collagen)',c:690,p:76},
+  {n:'Egg',c:72,p:6},{n:'Toast (slice)',c:80,p:3},{n:'Cheese (slice)',c:110,p:7},
+  {n:'Butter (1 tbsp)',c:100,p:0},{n:'Avocado (half)',c:120,p:2},
+  {n:'Yogurt + granola (bowl)',c:370,p:25},{n:'Oatmeal (cup)',c:150,p:5},
+  {n:'Banana',c:105,p:1},{n:'Whole milk (cup)',c:150,p:8},{n:'Peanut butter (2 tbsp)',c:190,p:8},
+  {n:'Whey scoop',c:120,p:25},{n:'Collagen scoop',c:35,p:9},
+  {n:'Burger',c:500,p:27},{n:'Pizza (slice)',c:285,p:12},{n:'Sandwich',c:350,p:20},
+  {n:'Steak (8 oz)',c:480,p:46},{n:'Salmon (6 oz)',c:350,p:40},{n:'White fish (6 oz)',c:220,p:40},
+  {n:'Chicken breast (6 oz)',c:280,p:53},{n:'Rice (cup)',c:205,p:4},
+  {n:'Ice cream (cup)',c:275,p:5},{n:'Cake (slice)',c:350,p:4}
+];
+var CAL_TARGET=3400, PRO_TARGET=180;
 
-var state = {day: new Date().getDay(), loc:null, feel:'normal'};
-function defLoc(d){return d===3?'field':'home'}
-state.loc = defLoc(state.day);
+/* ================= storage ================= */
+var MEMSTORE={};
+function sget(k){try{return localStorage.getItem(k)}catch(e){return MEMSTORE[k]||null}}
+function sset(k,v){try{localStorage.setItem(k,v)}catch(e){MEMSTORE[k]=v}}
+function todayKey(){var d=new Date();return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2)}
+function getLog(){try{return JSON.parse(sget('bt_log')||'{}')}catch(e){return{}}}
+function saveLog(L){sset('bt_log',JSON.stringify(L))}
+function dayRec(L,k){if(!L[k])L[k]={w:0,m:0,food:[]};if(!L[k].food)L[k].food=[];return L[k]}
+function getPrefs(){try{return JSON.parse(sget('bt_prefs')||'{}')}catch(e){return{}}}
+function savePrefs(){sset('bt_prefs',JSON.stringify({loc:state.loc,sub:state.sub,len:state.len,mlen:state.mlen}))}
 
-var DAYN = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-var $ = function(id){return document.getElementById(id)};
-
-function svg(fig){return '<svg viewBox="0 0 120 100" aria-hidden="true">'+ (FIGS[fig]||'') +'</svg>'}
-
-function render(){
-  var d = state.day, plan = DAYS[d];
-  var today = new Date();
-  $('hdate').textContent = today.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'}) + (d===today.getDay()?'':' · viewing '+DAYN[d]);
-  // day pills
-  var ph='';
-  for(var i=1;i<=7;i++){var idx=i%7;
-    ph+='<button class="pill'+(idx===d?' on':'')+'" onclick="setDay('+idx+')">'+DAYN[idx].slice(0,3)+'</button>';}
-  $('daypills').innerHTML=ph;
-
-  if(!plan){ renderRest(); return; }
-
-  $('hday').textContent = plan.t;
-  $('hgoal').textContent = plan.g;
-
-  var ls='';['home','gym','field'].forEach(function(L){
-    ls+='<button class="'+(state.loc===L?'on':'')+'" onclick="setLoc(\''+L+'\')">'+L[0].toUpperCase()+L.slice(1)+'</button>';});
-  $('locseg').innerHTML=ls; $('locseg').style.display='flex';
-
-  var feels=[['normal','Normal day'],['hips','Hips tired'],['strong','Feeling strong'],['low','Low energy'],['time','Short on time']];
-  var fh='';feels.forEach(function(f){fh+='<button class="feel'+(state.feel===f[0]?' on':'')+'" onclick="setFeel(\''+f[0]+'\')">'+f[1]+'</button>';});
-  $('feels').innerHTML=fh; $('feels').style.display='flex';
-
-  $('banner').innerHTML = FEELNOTES[state.feel]? '<div class="banner">'+FEELNOTES[state.feel]+'</div>' : '';
-
-  var blocks = plan.loc[state.loc].map(function(b){return {n:b.n, items:b.items.slice()}});
-  if(state.feel==='hips'){
-    blocks.forEach(function(b){ b.items=b.items.map(function(item){
-      var e=EX[item.x];
-      if(e && e.tags && e.tags.indexOf('hip')>-1 && e.alt){return {x:e.alt, rx:item.rx.replace(/\d+×/,'2×'), rest:item.rest, swapped:true};}
-      return item;});});
-  }
-  var html='';
-  blocks.forEach(function(b){
-    html+='<div class="block"><h2>'+b.n+(/Optional/i.test(b.n)?'':'')+'</h2>';
-    b.items.forEach(function(item){ html+=exCard(item); });
-    html+='</div>';
-  });
-  if(plan.bonus){
-    html+='<div class="block"><h2>'+plan.bonus.n+' <span class="opt">· optional</span></h2>';
-    plan.bonus.items.forEach(function(item){ html+=exCard(item); });
-    html+='</div>';
-  }
-  if(plan.arm){
-    html+='<div class="card"><h2>🧢 Driveline arm care</h2><p>Run your Driveline program today (and any day you throw). This plan leaves your arm work to it on purpose — do not double up with extra shoulder stuff.</p></div>';
-  }
-  html+= flowCard() + nutriCard();
-  $('content').innerHTML=html;
+/* ================= state ================= */
+var prefs=getPrefs();
+var state={day:new Date().getDay(),loc:prefs.loc||'co',sub:prefs.sub||'house',len:prefs.len||'m',mlen:prefs.mlen||'l',meal:'Breakfast'};
+var DAYN=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+var $=function(id){return document.getElementById(id)};
+function svgOf(fig){return '<svg viewBox="0 0 120 100" aria-hidden="true">'+(FIGS[fig]||'')+'</svg>'}
+function demoLink(name,kind){
+  var q=encodeURIComponent(name+' '+(kind==='mob'?'stretch tutorial':'exercise how to'));
+  return '<a class="demo" href="https://www.youtube.com/results?search_query='+q+'" target="_blank" rel="noopener">▶ Watch a demo</a>';
 }
 
-function exCard(item){
-  var e=EX[item.x]; if(!e) return '';
-  var id='x'+Math.random().toString(36).slice(2,8);
-  return '<div class="ex" id="'+id+'"><button onclick="tog(\''+id+'\')" aria-expanded="false">'+
-    '<span class="nm">'+e.n+(item.swapped?' <span style="color:var(--amber)">· swapped for your hips</span>':'')+'</span>'+
+/* ================= tracker ================= */
+function renderTrack(){
+  var L=getLog(),html='<div class="wk">',now=new Date();
+  for(var i=6;i>=0;i--){
+    var d=new Date(now);d.setDate(now.getDate()-i);
+    var k=d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2);
+    var r=L[k]||{},cls=r.w&&r.m?'wm':r.w?'w':r.m?'m':'';
+    var mark=r.w&&r.m?'✓':r.w?'W':r.m?'M':'';
+    html+='<div class="d"><div class="dot '+cls+'">'+mark+'</div>'+'SMTWTFS'.charAt(d.getDay())+'</div>';
+  }
+  html+='</div>';
+  var streak=0,c=new Date(now);
+  while(true){
+    var k2=c.getFullYear()+'-'+('0'+(c.getMonth()+1)).slice(-2)+'-'+('0'+c.getDate()).slice(-2);
+    var r2=L[k2]||{};
+    if(r2.w||r2.m){streak++;c.setDate(c.getDate()-1);}
+    else{if(streak===0&&k2===todayKey()){c.setDate(c.getDate()-1);var k3=c.getFullYear()+'-'+('0'+(c.getMonth()+1)).slice(-2)+'-'+('0'+c.getDate()).slice(-2);var r3=L[k3]||{};if(r3.w||r3.m){c.setDate(c.getDate()+0);continue}}break}
+  }
+  html+='<div class="streak"><b>'+streak+'</b>day streak</div>';
+  $('track').innerHTML=html;
+}
+
+/* ================= render ================= */
+function render(){
+  renderTrack();
+  var d=state.day,plan=DAYS[d],today=new Date();
+  $('hdate').textContent=today.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'})+(d===today.getDay()?'':' · viewing '+DAYN[d]);
+  var ph='';
+  for(var i=1;i<=7;i++){var idx=i%7;ph+='<button class="pill'+(idx===d?' on':'')+'" onclick="setDay('+idx+')">'+DAYN[idx].slice(0,3)+'</button>';}
+  $('daypills').innerHTML=ph;
+
+  if(!plan){renderRest();return;}
+  $('hday').textContent=plan.t;
+  $('hgoal').textContent=plan.g;
+
+  /* controls: location select (+ CO sub), then S/M/L */
+  var loc=LOCS.filter(function(l){return l.id===state.loc})[0]||LOCS[0];
+  var ch='<div class="row2"><select class="loc" onchange="setLoc(this.value)" aria-label="Where are you?">';
+  LOCS.forEach(function(l){ch+='<option value="'+l.id+'"'+(l.id===state.loc?' selected':'')+'>📍 '+l.n+'</option>';});
+  ch+='</select>';
+  if(loc.subs){ch+='<div class="seg grow">';loc.subs.forEach(function(s){ch+='<button class="'+(state.sub===s[0]?'on':'')+'" onclick="setSub(\''+s[0]+'\')">'+s[1]+'</button>';});ch+='</div>';}
+  ch+='</div>';
+  ch+='<div class="lenrow">'+
+    '<button class="'+(state.len==='s'?'on':'')+'" onclick="setLen(\'s\')">Short<span class="t">~25 min</span></button>'+
+    '<button class="'+(state.len==='m'?'on':'')+'" onclick="setLen(\'m\')">Medium<span class="t">~50 min</span></button>'+
+    '<button class="'+(state.len==='l'?'on':'')+'" onclick="setLen(\'l\')">Long<span class="t">~70 min</span></button></div>';
+  $('controls').innerHTML=ch;
+
+  var prof=profileFor(state.loc,state.sub);
+  var P=plan.p[prof]||plan.p.full;
+  var html='<div class="lead">Warm-up</div>';
+  P.wu.forEach(function(item){html+=exCard(item,false)});
+  html+='<div class="lead main">The workout</div>';
+  var mains=P.main.filter(function(item){return state.len==='s'?item.pr===1:true});
+  mains.forEach(function(item){html+=exCard(item,false)});
+  if(state.len==='l'){plan.bonus.forEach(function(item){html+=exCard(item,true)});}
+  html+=doneBtn();
+  if(plan.arm){html+='<div class="card"><h2>🧢 Driveline arm care</h2><p>Run your Driveline program today (and any day you throw). This plan leaves your arm work to it on purpose.</p></div>';}
+  html+=flowCard()+nutriCard();
+  $('content').innerHTML=html;
+  wireNutri();
+}
+
+function exCard(item,bonus){
+  var e=EX[item.x];if(!e)return'';
+  var id='x'+item.x+Math.floor(Math.random()*1e5);
+  var figs=e.fig.map(function(f,i){return '<div class="fr">'+svgOf(f)+(e.fig.length>1?'<span>'+(i===0?'Start':'Finish')+'</span>':'')+'</div>'}).join('');
+  return '<div class="ex'+(bonus?' bonus':'')+'" id="'+id+'"><button onclick="tog(\''+id+'\')" aria-expanded="false">'+
+    '<span class="nm">'+e.n+(bonus?' <span style="color:var(--mut);font-size:.8rem">· extra</span>':'')+'</span>'+
     '<span class="rx">'+item.rx+'</span></button>'+
-    '<div class="det"><div class="fig">'+svg(e.fig)+'</div>'+
+    '<div class="det"><div class="fig">'+figs+'</div>'+
     '<div class="g"><b>Set up</b><p>'+e.s+'</p></div>'+
     '<div class="g"><b>How to do it</b><p>'+e.e+'</p></div>'+
     '<div class="g"><b>It should feel like</b><p>'+e.f+'</p></div>'+
     '<div class="g"><b>Most common mistake</b><p>'+e.m+'</p></div>'+
-    (item.rest?'<div class="meta">Rest: '+item.rest+'</div>':'')+
+    (item.rest?'<div class="meta">Rest: '+item.rest+'</div>':'')+demoLink(e.n,'ex')+
     '</div></div>';
 }
 
+function doneBtn(){
+  var L=getLog(),r=L[todayKey()]||{};
+  return '<button class="big'+(r.w?' done':'')+'" onclick="markDone()">'+(r.w?'✓ Workout done — nice.':'Mark workout done')+'</button>';
+}
+function markDone(){
+  var L=getLog(),r=dayRec(L,todayKey());r.w=r.w?0:1;saveLog(L);render();
+}
+
+/* ================= mobility card ================= */
+function flowSteps(){
+  var tierMax=state.mlen==='s'?1:state.mlen==='m'?2:3;
+  return FLOW.filter(function(s){return s.tier<=tierMax});
+}
 function flowCard(){
-  var total=Math.round(FLOW.reduce(function(a,s){return a+s.d},0)/60);
-  var steps=FLOW.map(function(s){return '<div><span>'+s.n+'</span><span>'+(s.d>=60? Math.floor(s.d/60)+':'+('0'+s.d%60).slice(-2) : s.d+'s')+'</span></div>'}).join('');
-  return '<div class="card"><h2>🧘 Daily mobility flow · '+total+' min</h2>'+
-  '<p>Every day, no decisions: press start and follow it to the end. Beeps + a green flash move you to each next position automatically.</p>'+
-  '<button class="big" onclick="startFlow()">▶ Start the flow</button>'+
-  '<button class="linkish" onclick="var s=this.nextElementSibling;s.style.display=s.style.display===\'block\'?\'none\':\'block\'">See all '+FLOW.length+' steps</button>'+
-  '<div class="steps" style="display:none">'+steps+'</div></div>';
+  var steps=flowSteps();
+  var total=Math.round(steps.reduce(function(a,s){return a+s.d+READY},0)/60);
+  var L=getLog(),r=L[todayKey()]||{};
+  var list=steps.map(function(s){return '<div><span>'+s.n+'</span><span>'+(s.d>=60?Math.floor(s.d/60)+':'+('0'+s.d%60).slice(-2):s.d+'s')+'</span></div>'}).join('');
+  return '<div class="card"><h2>🧘 Daily mobility flow'+(r.m?' — ✓ done today':'')+'</h2>'+
+  '<p>Pick a length, press start, follow to the end. Each move begins with a get-ready countdown so you can see what to do first.</p>'+
+  '<div class="lenrow" style="margin:8px 0 0">'+
+    '<button class="'+(state.mlen==='s'?'on':'')+'" onclick="setMlen(\'s\')">Short<span class="t">~11 min</span></button>'+
+    '<button class="'+(state.mlen==='m'?'on':'')+'" onclick="setMlen(\'m\')">Medium<span class="t">~18 min</span></button>'+
+    '<button class="'+(state.mlen==='l'?'on':'')+'" onclick="setMlen(\'l\')">Long<span class="t">~26 min</span></button></div>'+
+  '<button class="big" onclick="startFlow()">▶ Start '+total+'-minute flow</button>'+
+  '<button class="linkish" onclick="var s=this.nextElementSibling;s.style.display=s.style.display===\'block\'?\'none\':\'block\'">See the '+steps.length+' steps</button>'+
+  '<div class="steps" style="display:none">'+list+'</div></div>';
 }
 
+/* ================= nutrition ================= */
 function nutriCard(){
-  return '<div class="card"><h2>🍽 Food floor (vacation rules)</h2><ul>'+
-  '<li><b>Protein every meal</b> — palm-and-a-half of meat/eggs/fish, 4 times a day.</li>'+
-  '<li><b>Never skip breakfast.</b></li>'+
-  '<li><b>Trained today?</b> Shake or big glass of milk + something within an hour after.</li>'+
-  '<li><b>Water:</b> carry a bottle; pale-yellow pee is the test.</li>'+
-  '<li>Holding 170 on vacation = winning. The surplus starts when you are home.</li></ul></div>';
+  var L=getLog(),r=dayRec(L,todayKey());
+  var cal=0,pro=0;r.food.forEach(function(f){cal+=f.c*f.q;pro+=f.p*f.q});
+  var meals=['Breakfast','Lunch','Dinner','Snack'];
+  var mb=meals.map(function(m){return '<button class="'+(state.meal===m?'on':'')+'" onclick="setMeal(\''+m+'\')">'+m+'</button>'}).join('');
+  var opts='<option value="">+ pick a food…</option>';
+  FOODS.forEach(function(f,i){opts+='<option value="'+i+'">'+f.n+' ('+f.c+' cal)</option>';});
+  opts+='<option value="other">Other (type it in)…</option>';
+  var list='';
+  r.food.forEach(function(f,i){
+    list+='<div class="fi"><span><span class="fm">'+f.m.slice(0,1)+'</span>'+f.n+(f.q!==1?' × '+f.q:'')+'</span>'+
+    '<span class="fnum">'+Math.round(f.c*f.q)+' cal · '+Math.round(f.p*f.q)+'g P '+
+    '<button class="del" onclick="delFood('+i+')" aria-label="remove">×</button></span></div>';
+  });
+  return '<div class="card"><h2>🍽 Food log — today</h2>'+
+  '<div class="totals">'+
+    '<div class="tot"><b>'+Math.round(cal)+'</b><span>of '+CAL_TARGET+' cal</span></div>'+
+    '<div class="tot"><b>'+Math.round(pro)+'g</b><span>of '+PRO_TARGET+'g protein</span></div></div>'+
+  '<div class="meals">'+mb+'</div>'+
+  '<div class="addrow"><select id="foodsel">'+opts+'</select><input id="foodqty" type="number" inputmode="decimal" value="1" min="0.25" step="0.25" aria-label="how many"><button onclick="addFood()">Add</button></div>'+
+  '<div class="custom" id="customrow"><input class="cn" id="cn" placeholder="food name"><input class="cc" id="cc" type="number" inputmode="numeric" placeholder="cal"><input class="cp" id="cp" type="number" inputmode="numeric" placeholder="g P"></div>'+
+  (list?'<div class="foodlist">'+list+'</div>':'<p style="color:var(--mut);font-size:.9rem">Nothing logged yet. Ex: pick Egg, type 3, hit Add.</p>')+
+  '</div>';
 }
+function wireNutri(){
+  var sel=$('foodsel');if(!sel)return;
+  sel.onchange=function(){$('customrow').className='custom'+(sel.value==='other'?' show':'')};
+}
+function setMeal(m){state.meal=m;render();}
+function addFood(){
+  var sel=$('foodsel'),q=parseFloat($('foodqty').value)||1;
+  var L=getLog(),r=dayRec(L,todayKey());
+  if(sel.value==='other'){
+    var n=$('cn').value.trim(),c=parseFloat($('cc').value)||0,p=parseFloat($('cp').value)||0;
+    if(!n)return;
+    r.food.push({n:n,c:c,p:p,q:q,m:state.meal});
+  }else if(sel.value!==''){
+    var f=FOODS[parseInt(sel.value,10)];
+    r.food.push({n:f.n,c:f.c,p:f.p,q:q,m:state.meal});
+  }else{return}
+  saveLog(L);render();
+}
+function delFood(i){var L=getLog(),r=dayRec(L,todayKey());r.food.splice(i,1);saveLog(L);render();}
 
+/* ================= rest day ================= */
 function renderRest(){
   $('hday').textContent='Recover + Flow';
   $('hgoal').textContent='Rest is a training day. Flow, walk, eat, sleep.';
-  $('locseg').style.display='none'; $('feels').style.display='none'; $('banner').innerHTML='';
-  $('content').innerHTML =
+  $('controls').innerHTML='';
+  $('content').innerHTML=
     '<div class="card"><h2>Today</h2><ul>'+
     '<li>The mobility flow below — done slow, this is the best one of the week.</li>'+
-    '<li>A 20–30 min easy walk.</li>'+
-    '<li>Optional: 10 relaxed shadow swings, feel the rhythm, no max intent.</li>'+
-    '<li>Sleep 8–9 hours tonight — that is where this week gets banked.</li></ul></div>'
-    + flowCard() + nutriCard();
+    '<li>A 20-30 min easy walk.</li>'+
+    '<li>Optional: 10 relaxed shadow swings, feel the rhythm.</li>'+
+    '<li>Sleep 8-9 hours tonight — that is where this week gets banked.</li></ul></div>'+
+    flowCard()+nutriCard();
+  wireNutri();
 }
 
 function tog(id){var el=$(id);el.classList.toggle('open');el.querySelector('button').setAttribute('aria-expanded',el.classList.contains('open'));}
-function setDay(d){state.day=d;state.loc=defLoc(d);state.feel='normal';render();window.scrollTo(0,0);}
-function setLoc(l){state.loc=l;render();}
-function setFeel(f){state.feel=f;render();}
+function setDay(d){state.day=d;render();window.scrollTo(0,0);}
+function setLoc(l){state.loc=l;savePrefs();render();}
+function setSub(s){state.sub=s;savePrefs();render();}
+function setLen(l){state.len=l;savePrefs();render();}
+function setMlen(l){state.mlen=l;savePrefs();render();}
 
-/* ---------- flow player ---------- */
-var P={i:0,left:0,timer:null,paused:false,ctx:null};
+/* ================= flow player ================= */
+var READY=12;
+var P={list:[],i:0,left:0,mode:'ready',timer:null,paused:false,ctx:null};
 function beep(n){
   try{
-    if(!P.ctx) P.ctx = new (window.AudioContext||window.webkitAudioContext)();
+    if(!P.ctx)P.ctx=new (window.AudioContext||window.webkitAudioContext)();
     var t=P.ctx.currentTime;
     for(var k=0;k<n;k++){
       var o=P.ctx.createOscillator(),g=P.ctx.createGain();
@@ -459,15 +639,28 @@ function beep(n){
   }catch(e){}
   var f=$('flash');f.classList.add('on');setTimeout(function(){f.classList.remove('on')},220);
 }
-function startFlow(){P.i=0;P.paused=false;$('player').classList.add('on');beep(1);loadStep();}
+function startFlow(){
+  P.list=flowSteps();P.i=0;P.mode='ready';P.paused=false;
+  $('player').classList.add('on');beep(1);loadStep();
+}
 function loadStep(){
-  var s=FLOW[P.i];P.left=s.d;
-  $('pcount').textContent=(P.i+1)+' of '+FLOW.length;
-  $('ptype').textContent = s.t==='hold'?'Long hold — breathe':s.t==='breathe'?'Down-regulate':'Keep moving';
-  $('pfig').innerHTML=svg(s.fig);
+  var s=P.list[P.i];
+  P.left=P.mode==='ready'?READY:s.d;
+  $('pcount').textContent=(P.i+1)+' of '+P.list.length;
+  var frames=s.frames.map(function(fr){return '<div class="fr">'+svgOf(fr[0])+'<span>'+fr[1]+'</span></div>'}).join('');
+  $('pfig').innerHTML=frames;
   $('pname').textContent=s.n;
-  $('pcue').textContent=s.c;
-  $('pnext').textContent = P.i+1<FLOW.length ? 'Next: '+FLOW[P.i+1].n : 'Last one — finish strong';
+  if(P.mode==='ready'){
+    $('ptype').textContent='Get ready';$('ptype').className='ready';
+    $('pcue').innerHTML='<ol>'+s.steps.slice(0,3).map(function(st){return '<li>'+st+'</li>'}).join('')+'</ol>';
+    $('ptime').className='ready';
+  }else{
+    $('ptype').textContent=s.t==='hold'?'Long hold — breathe':s.t==='breathe'?'Down-regulate':'Keep moving';
+    $('ptype').className='';
+    $('pcue').textContent=s.c;
+    $('ptime').className='';
+  }
+  $('pnext').textContent=P.i+1<P.list.length?'Next: '+P.list[P.i+1].n:'Last one — finish strong';
   drawTime();updateBar();
   clearInterval(P.timer);P.timer=setInterval(tick,1000);
 }
@@ -475,20 +668,35 @@ function tick(){
   if(P.paused)return;
   P.left--;drawTime();updateBar();
   if(P.left<=0){
-    if(P.i+1>=FLOW.length){beep(3);endFlow();return;}
-    P.i++;beep(P.i%2===0?1:1);loadStep();
-  } else if(P.left<=3){beep(0);/*silent tick*/}
+    if(P.mode==='ready'){P.mode='work';beep(2);loadStep();return;}
+    if(P.i+1>=P.list.length){finishFlow();return;}
+    P.i++;P.mode='ready';beep(1);loadStep();
+  }
 }
-function drawTime(){var m=Math.floor(P.left/60),s=P.left%60;$('ptime').textContent=(m>0? m+':'+('0'+s).slice(-2): s);}
+function drawTime(){var m=Math.floor(P.left/60),s=P.left%60;$('ptime').textContent=(m>0?m+':'+('0'+s).slice(-2):s);}
 function updateBar(){
-  var done=0;for(var k=0;k<P.i;k++)done+=FLOW[k].d;done+=FLOW[P.i].d-P.left;
-  var total=FLOW.reduce(function(a,s){return a+s.d},0);
+  var per=READY,done=0,total=0;
+  P.list.forEach(function(s,idx){total+=s.d+per;if(idx<P.i)done+=s.d+per;});
+  done+= P.mode==='ready'?(READY-P.left):(READY+P.list[P.i].d-P.left);
   $('pbarF').style.width=(100*done/total)+'%';
 }
 function togglePause(){P.paused=!P.paused;$('pausebtn').textContent=P.paused?'Resume':'Pause';}
-function stepBack(){if(P.left<FLOW[P.i].d-3){loadStep();}else if(P.i>0){P.i--;loadStep();}beep(1);}
-function stepSkip(){if(P.i+1>=FLOW.length){beep(3);endFlow();return;}P.i++;beep(1);loadStep();}
-function endFlow(){clearInterval(P.timer);$('player').classList.remove('on');$('pausebtn').textContent='Pause';}
+function stepBack(){
+  if(P.mode==='work'){P.mode='ready';loadStep();}
+  else if(P.i>0){P.i--;P.mode='ready';loadStep();}
+  beep(1);
+}
+function stepSkip(){
+  if(P.mode==='ready'){P.mode='work';loadStep();beep(2);return;}
+  if(P.i+1>=P.list.length){finishFlow();return;}
+  P.i++;P.mode='ready';beep(1);loadStep();
+}
+function finishFlow(){
+  beep(3);
+  var L=getLog(),r=dayRec(L,todayKey());r.m=1;saveLog(L);
+  endFlow(true);
+}
+function endFlow(){clearInterval(P.timer);$('player').classList.remove('on');$('pausebtn').textContent='Pause';render();}
 
 render();
 </script>
